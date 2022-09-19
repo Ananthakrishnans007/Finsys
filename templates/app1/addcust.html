@@ -85,8 +85,8 @@
                                            id="validationCustom05" name="gstin"
                                            style="background-color: #2f516f;color: white;"
                                            placeholder="29APPCK7465F1Z1">
-                                           <a href=""
-                                   target="_blank" style="color:#3dd5f3">Get Taxpayer Details</a>
+                                           <a data-toggle="modal" href="#exampleModal"
+                                    style="color:#3dd5f3">Get Taxpayer Details</a>
                                     <div class="text-danger m-2" id="warngst"></div>
                                 </div>
                             </div>
@@ -141,6 +141,17 @@
                                     <input type="text" class="form-control" 
                                            
                                            style="background-color: #2f516f;color: white;">
+                                    <div class="text-danger m-2" id="warngst"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mt-3" >
+                                <div>
+                                    <label for="validationCustom05">TAX RETURNS</label><br>
+                                    <input type="radio" name="Returns" 
+                                           
+                                           style="background-color: #2f516f;color: white;"> Taxable
+                                           <input type="radio" name="Returns"  
+                                           style="background-color: #2f516f;color: white;"> Non Taxable
                                     <div class="text-danger m-2" id="warngst"></div>
                                 </div>
                             </div>
@@ -408,10 +419,10 @@
         </div>
     </div>
 
+<!-- 
+    modal -->
 
-    <!-- modal -->
-
-    <!-- <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -438,7 +449,7 @@
             </div>
           </div>
         </div>
-      </div> -->
+      </div>
 
 
 

@@ -25633,12 +25633,9 @@ def gosearch(request):
                 context = {'customers': custo, 'cmp1': cmp1}
                 return render(request, 'app1/customers.html', context)
 
-            
-            
-
-        
-
-        
+   
     else:
         return redirect('gocustomers')
+
+
 
