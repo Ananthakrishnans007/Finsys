@@ -14,7 +14,7 @@ import json
 from django.http.response import JsonResponse
 from django.contrib.auth.decorators import login_required
 import itertools
-
+import requests
 
 def index(request):
     return render(request, 'app1/index.html')
@@ -25637,5 +25637,26 @@ def gosearch(request):
     else:
         return redirect('gocustomers')
 
+
+
+
+def gstverification(request):
+
+    url = "https://www.knowyourgst.com/developers/gstincall/"
+    querystring = {"gstin":"24AABCU9603R1ZT"}
+    headers = {
+        'passthrough': "YXNkZjEyMzQ1NjYxODM3NzE4NjM",
+        }
+    res = requests.request("GET", url, headers=headers, params=querystring).json()
+    print(res)
+    
+    
+    return render(request,'app1/addcust.html',{'response':res})
+
+
+
+def goestimate(request):
+
+    return render(request,'app1/goestimate.html')
 
 

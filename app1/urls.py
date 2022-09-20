@@ -1,4 +1,4 @@
-from django.urls import re_path
+from django.urls import re_path,path
 from . import views
 
 urlpatterns = [
@@ -351,7 +351,16 @@ urlpatterns = [
     re_path(r'^editstyle/updatestyle/(?P<customizeid>\d+)$',views.updatestyle,name='updatestyle'),
     re_path(r'^deletestyle/(?P<customizeid>\d+)$',views.deletestyle,name='deletestyle'),
 
+
+
+
     re_path(r'^gosearch',views.gosearch,name='gosearch'),
+
+    path('gstverification',views.gstverification,name='gstverification'),
+
+    path('goestimate',views.goestimate,name='goestimate'),
+
+    
 
 
     
