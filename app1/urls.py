@@ -360,6 +360,14 @@ urlpatterns = [
 
     path('goestimate',views.goestimate,name='goestimate'),
 
+    path('estindex2',views.estindex2,name='estindex2'),
+
+    
+
+    path('estcreate2',views.estcreate2,name='estcreate2'),
+
+    
+
     
 
 

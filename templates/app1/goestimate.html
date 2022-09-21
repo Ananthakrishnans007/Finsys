@@ -112,7 +112,7 @@ body{
                        
 
                         <div class="col-md-2">
-                            <a href="{% url 'estindex' %}" >
+                            <a href="{% url 'estindex2' %}" >
                                 <button id="myBtn" class="btn btn-outline-info text-grey" style="margin-top: 8px;">New Estimate</button>
                             </a>
                         </div>
@@ -132,20 +132,30 @@ body{
                             </tr>
                             </thead>
                             <tbody>
-                            {% for customer in customers %}
-                                {% if customer.cid_id == cmp1.cid %}
+                                {% for estimate in est1 %}
+                                {% if estimate.cid_id == cmp1.cid %}
                                     <tr>
-                                        <td>{{ customer.firstname }} {{ customer.lastname }}</td>
-                                        <td>{{ customer.gsttype }}</td>
-                                        <td>{{ customer.gstin }}</td>
-                                        <td>{{ customer.panno }}</td>
-                                        <td>{{ customer.email }}</td>
-                                        <td>{{ customer.mobile }}</td>
-                                        <td><a href="editcustomer/{{ customer.customerid }}"
-                                               style="color: white; font-size: 15px;"><i class="bx bx-edit">EDIT</i></a><br>
-                                            <a href="deletecustomer/{{ customer.customerid }}"
-                                               style="color:white; font-size: 15px;"><i
-                                                    class="bx bx-trash">DELETE</i></a><br></td>
+                                        <th style="text-align: center;">{{ estimate.estimatedate }}</th>
+                                        <td style="text-align: center;">{{ estimate.estimateno }}</td>
+                                        <td style="text-align: center;"></td>
+                                        <td style="text-align: center;">{{ estimate.customer }}</td>
+                                        <td style="text-align: center;"></td>
+                                        <td style="text-align: center;">{{ estimate.estimatetotal }}</td>
+                                        <td style="text-align: center;">
+                                            <div class="dropdown">
+                                                <button type="button" class="btn btn-outline-info dropdown-toggle text-grey"
+                                                        data-toggle="dropdown">Actions
+                                                </button>
+                                                <div class="dropdown-menu" style="background-color: white;">
+                                                    <a href="editestimate/{{ estimate.estimateid }}" class="dropdown-item"
+                                                       style="color:black; font-size: 15px;"><i
+                                                            class="bx bx-edit"><b>EDIT</b></i></a>
+                                                    <a href="deleteestimate/{{ estimate.estimateid }}" class="dropdown-item"
+                                                       style="color:black; font-size: 15px;"><i
+                                                            class="bx bx-trash"><b>DELETE</b></i></a>
+                                                </div>
+                                            </div>
+                                        </td>
                                     </tr>
                                 {% endif %}
                             {% endfor %}

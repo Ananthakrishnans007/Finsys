@@ -1,3 +1,4 @@
+from multiprocessing import context
 from django.conf import settings
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect
@@ -25656,7 +25657,61 @@ def gstverification(request):
 
 
 def goestimate(request):
+    cmp1 = company.objects.get(id=request.session["uid"])
+    est1 = estimate.objects.filter(cid=cmp1).all()
 
-    return render(request,'app1/goestimate.html')
+    context = {
+        'est1' :est1,
+        'cmp1': cmp1
+
+    }
+    return render(request,'app1/goestimate.html',context)
+
+@login_required(login_url='regcomp')
+def estindex2(request):
+    try:
+        cmp1 = company.objects.get(id=request.session["uid"])
+        toda = date.today()
+        tod = toda.strftime("%Y-%m-%d")
+        customers = customer.objects.filter(cid=cmp1).all()
+        est1 = estimate.objects.filter(cid=cmp1).all()
+        inv = inventory.objects.filter(cid=cmp1).all()
+        bun = bundle.objects.filter(cid=cmp1).all()
+        noninv = noninventory.objects.filter(cid=cmp1).all()
+        ser = service.objects.filter(cid=cmp1).all()
+        context = {'est': est1, 'customers': customers, 'cmp1': cmp1, 'inv': inv, 'bun': bun, 'noninv': noninv,
+                   'ser': ser, 'tod': tod}
+        return render(request, 'app1/estimate2.html', context)
+    except:
+        return redirect('goestimate')
+
+
+@login_required(login_url='regcomp')
+def estcreate2(request):
+    try:
+        cmp1 = company.objects.get(id=request.session["uid"])
+        est2 = estimate(customer=request.POST['customer'], email=request.POST['email'], billingaddress=request.POST['billingaddress'], estimatedate=request.POST['estimatedate'], expirationdate=request.POST['expirationdate'], placeofsupply=request.POST['placeofsupply'],
+                        estimateno='1000', product=request.POST['product'], description=request.POST['description'],
+                        hsn=request.POST['hsn'],
+                        qty=request.POST['qty'], rate=request.POST['rate'], tax=request.POST['tax'],
+                        total=request.POST['total'], taxamount=request.POST['taxamount'],
+                        subtotal=request.POST['sub_total'], estimatetotal=request.POST['estimatetotal'], product1=request.POST[
+                            'product1'], hsn1=request.POST['hsn1'], qty1=request.POST['qty1'],
+                        description1=request.POST['description1'], rate1=request.POST[
+                            'rate1'], total1=request.POST['total1'], tax1=request.POST['tax1'],
+                        product2=request.POST['product2'], hsn2=request.POST['hsn2'], qty2=request.POST['qty2'],
+                        description2=request.POST['description2'], rate2=request.POST[
+                            'rate2'], total2=request.POST['total2'], tax2=request.POST['tax2'],
+                        product3=request.POST['product3'], hsn3=request.POST['hsn3'], qty3=request.POST['qty3'],
+                        description3=request.POST['description3'], rate3=request.POST[
+                            'rate3'], total3=request.POST['total3'], tax3=request.POST['tax3'],
+                        cid=cmp1)
+        est2.save()
+        est2.estimateno = int(est2.estimateno) + est2.estimateid
+        est2.save()
+        return redirect('goestimate')
+    except:
+        return redirect('goestimate')
+
 
 
