@@ -25705,7 +25705,8 @@ def estcreate2(request):
                         product3=request.POST['product3'], hsn3=request.POST['hsn3'], qty3=request.POST['qty3'],
                         description3=request.POST['description3'], rate3=request.POST[
                             'rate3'], total3=request.POST['total3'], tax3=request.POST['tax3'],
-                        cid=cmp1)
+                        cid=cmp1,
+                        reference_number = request.POST['Ref_No'])
         est2.save()
         est2.estimateno = int(est2.estimateno) + est2.estimateid
         est2.save()

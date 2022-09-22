@@ -35,10 +35,48 @@
                 if (html != '') {
                     var qty = $(this).find('.qty').val();
                     var price = $(this).find('.price').val();
+
+                    
+                   
                     var tax = $(this).find('.tax').val();
+                    
+
+                    if (tax ==1)
+                        tax=28
+                    if (tax ==2)
+                        tax=28 
+                    if (tax ==3)
+                        tax=18      
+                    if (tax ==4)
+                        tax=18
+                    if (tax ==5)
+                        tax=12 
+                    if (tax ==6)
+                        tax=12
+                    if (tax ==7)
+                        tax=6 
+                    if (tax ==8)
+                        tax=6
+                    if (tax ==9)
+                        tax=5
+                    if (tax ==10)
+                        tax=5 
+                    if (tax ==11)
+                        tax=3
+                    if (tax ==12)
+                        tax=3
+                    if (tax ==13)
+                        tax=.25
+                    if (tax ==14)
+                        tax=.25
+                    if (tax ==0)
+                        tax=0        
+
                     var taxamount = $(this).find('.taxamount').val();
+
+                    
                     $(this).find('.total').val(qty * price);
-                    $(this).find('.taxamount').val((qty * price) * (tax / 100));
+                    $(this).find('.taxamount').val((qty * price) * (tax  / 100));
 
                     calc_total();
                 }
@@ -51,12 +89,23 @@
                 total += parseFloat($(this).val());
             });
             taxamount = 0;
+            CGST_tax_amount =0;
+            SGST_tax_amount = 0;
             $('.taxamount').each(function () {
                 taxamount += parseFloat($(this).val());
             });
+
+            
+
             $('#sub_total').val(total.toFixed(2));
             $('#tax_amount').val(taxamount.toFixed(2));
+            
+            $('#CGST_tax_amount').val((taxamount/2).toFixed(2));
+            $('#SGST_tax_amount').val((taxamount/2).toFixed(2));
+
+
             tax_sum = total / 100 * $('#tax').val();
+
             $('#total_amount').val((taxamount + total).toFixed(2));
         }
     </script>
@@ -85,7 +134,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col">
-                            <center><h2>Fin sYs</h2></center>
+                            <!-- <center><h2>Fin sYs</h2></center> -->
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -102,16 +151,13 @@
                                         {% endif %}
                                     {% endfor %}
                                 </select>
-                                <a href="{% url 'goaddcustestimate' %}">
+                                <a data-toggle="modal" href="#exampleModal">
                                     <button type="button" class="btn btn-outline-secondary ml-1">+</button>
                                 </a>
                             </div>
 
                         </div>
-                        <div class="col-md-3">
-                            <label class="col-form-label">Email</label>
-                            <input type="text" class="form-control" id="email" name="email" placeholder="Email">
-                        </div>
+                        
                         <div class="col-md-3"></div>
                         <div class="col-md-3"></div>
                     </div>
@@ -121,6 +167,13 @@
                             <label for="billingaddress"></label>
                             <textarea class="form-control" rows="7" id="billin" name="billingaddress"></textarea>
                         </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-3">
+                            <label class="col-form-label">Email</label>
+                            <input type="text" class="form-control" id="email" name="email" placeholder="Email">
+                        </div>
+                        
                         <div class="col-md-3">
                             <label class="col-form-label">Estimate Date</label>
                             <input type="text" class="form-control" value="{{ tod }}" name="estimatedate"><br>
@@ -130,6 +183,8 @@
                             <input type="date" class="form-control" name="expirationdate"><br>
                         </div>
                         <div class="col-md-3">
+                            <label class="col-form-label">Reference Number</label>
+                            <input type="text" class="form-control" name="Ref_No"><br>
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -153,8 +208,9 @@
                                     <th>Description</th>
                                     <th>QTY</th>
                                     <th>Rate</th>
-                                    <th>Total</th>
                                     <th>Tax (%)</th>
+                                    <th>Amount</th>
+                                   
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -202,24 +258,37 @@
                                                class="form-control price" step="0.00"
                                                min="0"/>
                                     </td>
-                                    <td><input type="number" name='total' id="total" placeholder='0.00'
-                                               class="form-control total" readonly/></td>
+
                                     <td>
                                         <select name="tax" id="tax" class="form-control tax"
-                                                style="background-color: #2f516f; color: white;">
+                                                style="background-color: #2f516f; color: white;"  onchange="filtertax(this)">
                                             <option value="" selected>Choose</option>
-                                            <option value="28">28.0% GST(28%)</option>
-                                            <option value="18">18.0% GST(18%)</option>
-                                            <option value="12">12.0% GST(12%)</option>
-                                            <option value="6">06.0% GST(06%)</option>
-                                            <option value="5">05.0% GST(05%)</option>
-                                            <option value="3">03.0% GST(03%)</option>
-                                            <option value=".25">0.25% GST(0.25%)</option>
+                                            <option value="1">28.0% GST(28%)</option>
+                                            <option value="2">28.0% IGST(28%)</option>
+                                            <option value="3">18.0% GST(18%)</option>
+                                            <option value="4">18.0% IGST(18%)</option>
+                                            <option value="5">12.0% GST(12%)</option>
+                                            <option value="6">12.0% IGST(12%)</option>
+                                            <option value="7">06.0% GST(06%)</option>
+                                            <option value="8">06.0% IGST(06%)</option>
+                                            <option value="9">05.0% GST(05%)</option>
+                                            <option value="10">05.0% IGST(05%)</option>
+                                            <option value="11">03.0% GST(03%)</option>
+                                            <option value="12">03.0% IGST(03%)</option>
+                                            <option value="13">0.25% GST(0.25%)</option>
+                                            <option value="14">0.25% IGST(0.25%)</option>
                                             <option value="0">0.0% GST(0%)</option>
+                                            <option value="0">Exempt GST(0%)</option>
                                             <option value="0">Exempt GST(0%)</option>
                                             <option value="0">Out of Scope(0%)</option>
                                         </select>
                                     </td>
+
+
+
+                                    <td><input type="number" name='total' id="total" placeholder='0.00'
+                                               class="form-control total" readonly/></td>
+                                    
                                     <td style="display: none;"><input type="number" name='taxamount' id="taxamount"
                                                                       class="form-control taxamount"/></td>
                                 <tr id='addr0'>
@@ -265,25 +334,34 @@
                                                min="0"/>
                                     </td>
 
-                                    <td><input type="number" name='total1' id="total2"
-                                               placeholder='0.00' class="form-control total"
-                                               readonly/></td>
                                     <td>
                                         <select name="tax1" id="tax1" class="form-control tax"
                                                 style="background-color: #2f516f; color: white;">
-                                            <option value="" selected>Choose</option>
-                                            <option value="28">28.0% GST(28%)</option>
-                                            <option value="18">18.0% GST(18%)</option>
-                                            <option value="12">12.0% GST(12%)</option>
-                                            <option value="6">06.0% GST(06%)</option>
-                                            <option value="5">05.0% GST(05%)</option>
-                                            <option value="3">03.0% GST(03%)</option>
-                                            <option value=".25">0.25% GST(0.25%)</option>
-                                            <option value="0">0.0% GST(0%)</option>
-                                            <option value="0">Exempt GST(0%)</option>
-                                            <option value="0">Out of Scope(0%)</option>
+                                                <option value="" selected>Choose</option>
+                                                <option value="28">28.0% GST(28%)</option>
+                                                <option value="28">28.0% IGST(28%)</option>
+                                                <option value="18">18.0% GST(18%)</option>
+                                                <option value="18">18.0% IGST(18%)</option>
+                                                <option value="12">12.0% GST(12%)</option>
+                                                <option value="12">12.0% IGST(12%)</option>
+                                                <option value="6">06.0% GST(06%)</option>
+                                                <option value="6">06.0% IGST(06%)</option>
+                                                <option value="5">05.0% GST(05%)</option>
+                                                <option value="5">05.0% IGST(05%)</option>
+                                                <option value="3">03.0% GST(03%)</option>
+                                                <option value="3">03.0% IGST(03%)</option>
+                                                <option value=".25">0.25% GST(0.25%)</option>
+                                                <option value=".25">0.25% IGST(0.25%)</option>
+                                                <option value="0">0.0% GST(0%)</option>
+                                                <option value="0">Exempt GST(0%)</option>
+                                                <option value="0">Exempt GST(0%)</option>
+                                                <option value="0">Out of Scope(0%)</option>
                                         </select>
                                     </td>
+                                    <td><input type="number" name='total1' id="total2"
+                                               placeholder='0.00' class="form-control total"
+                                               readonly/></td>
+                                    
                                     <td style="display: none;"><input type="number" name='taxamount1' id="taxamount1"
                                                                       class="form-control taxamount"/></td>
                                 <tr id='addr0'>
@@ -329,25 +407,35 @@
                                                min="0"/>
                                     </td>
 
-                                    <td><input type="number" name='total2' id="total3"
-                                               placeholder='0.00' class="form-control total"
-                                               readonly/></td>
                                     <td>
                                         <select name="tax2" id="tax2" class="form-control tax"
                                                 style="background-color: #2f516f; color: white;">
-                                            <option value="" selected>Choose</option>
-                                            <option value="28">28.0% GST(28%)</option>
-                                            <option value="18">18.0% GST(18%)</option>
-                                            <option value="12">12.0% GST(12%)</option>
-                                            <option value="6">06.0% GST(06%)</option>
-                                            <option value="5">05.0% GST(05%)</option>
-                                            <option value="3">03.0% GST(03%)</option>
-                                            <option value=".25">0.25% GST(0.25%)</option>
-                                            <option value="0">0.0% GST(0%)</option>
-                                            <option value="0">Exempt GST(0%)</option>
-                                            <option value="0">Out of Scope(0%)</option>
+                                                <option value="" selected>Choose</option>
+                                                <option value="28">28.0% GST(28%)</option>
+                                                <option value="28">28.0% IGST(28%)</option>
+                                                <option value="18">18.0% GST(18%)</option>
+                                                <option value="18">18.0% IGST(18%)</option>
+                                                <option value="12">12.0% GST(12%)</option>
+                                                <option value="12">12.0% IGST(12%)</option>
+                                                <option value="6">06.0% GST(06%)</option>
+                                                <option value="6">06.0% IGST(06%)</option>
+                                                <option value="5">05.0% GST(05%)</option>
+                                                <option value="5">05.0% IGST(05%)</option>
+                                                <option value="3">03.0% GST(03%)</option>
+                                                <option value="3">03.0% IGST(03%)</option>
+                                                <option value=".25">0.25% GST(0.25%)</option>
+                                                <option value=".25">0.25% IGST(0.25%)</option>
+                                                <option value="0">0.0% GST(0%)</option>
+                                                <option value="0">Exempt GST(0%)</option>
+                                                <option value="0">Exempt GST(0%)</option>
+                                                <option value="0">Out of Scope(0%)</option>
                                         </select>
                                     </td>
+
+                                    <td><input type="number" name='total2' id="total3"
+                                               placeholder='0.00' class="form-control total"
+                                               readonly/></td>
+                                    
                                     <td style="display: none;"><input type="number" name='taxamount2' id="taxamount2"
                                                                       class="form-control taxamount"/></td>
                                 <tr id='addr0'>
@@ -392,25 +480,34 @@
                                                class="form-control price" step="0.00"
                                                min="0"/>
                                     </td>
-                                    <td><input type="number" name='total3' id="total4"
-                                               placeholder='0.00' class="form-control total"
-                                               readonly/></td>
                                     <td>
                                         <select name="tax3" id="tax3" class="form-control tax"
                                                 style="background-color: #2f516f; color: white;">
-                                            <option value="" selected>Choose</option>
-                                            <option value="28">28.0% GST(28%)</option>
-                                            <option value="18">18.0% GST(18%)</option>
-                                            <option value="12">12.0% GST(12%)</option>
-                                            <option value="6">06.0% GST(06%)</option>
-                                            <option value="5">05.0% GST(05%)</option>
-                                            <option value="3">03.0% GST(03%)</option>
-                                            <option value=".25">0.25% GST(0.25%)</option>
-                                            <option value="0">0.0% GST(0%)</option>
-                                            <option value="0">Exempt GST(0%)</option>
-                                            <option value="0">Out of Scope(0%)</option>
+                                                <option value="" selected>Choose</option>
+                                                <option value="28" >28.0% GST(28%)</option>
+                                                <option value="28">28.0% IGST(28%)</option>
+                                                <option value="18">18.0% GST(18%)</option>
+                                                <option value="18">18.0% IGST(18%)</option>
+                                                <option value="12">12.0% GST(12%)</option>
+                                                <option value="12">12.0% IGST(12%)</option>
+                                                <option value="6">06.0% GST(06%)</option>
+                                                <option value="6">06.0% IGST(06%)</option>
+                                                <option value="5">05.0% GST(05%)</option>
+                                                <option value="5">05.0% IGST(05%)</option>
+                                                <option value="3">03.0% GST(03%)</option>
+                                                <option value="3">03.0% IGST(03%)</option>
+                                                <option value=".25">0.25% GST(0.25%)</option>
+                                                <option value=".25">0.25% IGST(0.25%)</option>
+                                                <option value="0">0.0% GST(0%)</option>
+                                                <option value="0">Exempt GST(0%)</option>
+                                                <option value="0">Exempt GST(0%)</option>
+                                                <option value="0">Out of Scope(0%)</option>
                                         </select>
                                     </td>
+                                    <td><input type="number" name='total3' id="total4"
+                                               placeholder='0.00' class="form-control total"
+                                               readonly/></td>
+                                    
                                     <td style="display: none;"><input type="number" name='taxamount3' id="taxamount3"
                                                                       class="form-control taxamount"/></td>
                                 </tbody>
@@ -421,9 +518,66 @@
                         </div>
                     </div>
                     <div class="row clearfix" style="margin-top:20px">
-                        <div class="col-md-6"></div>
-                        <div class="col-md-6 table-responsive-md">
-                            <table class="table table-bordered table-hover"
+                        <div class="col-md-6">
+
+                            <textarea class="form-control"  id="" name="Note" placeholder="Note" style="height: 190px;"></textarea>
+
+
+                        </div>
+
+                       
+                        <div class="col-md-6 table-responsive-md" style="margin-top: 8px;">
+                            
+
+                            <div>
+                                
+                                <label class="text-center  form-control" style=" width: 35%; font-weight: 10; ">Sub Total</label>
+                                <input type="number"
+                                name='sub_total'
+                                placeholder='0.00'
+                                class="form-control "
+                                id="sub_total" style="width: 60%; margin-top: -45px; float: right; margin-right: 10px;"   readonly/>
+                            </div>
+                            <div id="IGST">  
+                                <label class="text-center  form-control" style=" width: 35%; font-weight: 10; ">IGST</label>
+                                <input type="number"
+                                name='taxamount'
+                                id="tax_amount"
+                                placeholder='0.00'
+                                class="form-control"
+                                 style="width: 60%; margin-top: -45px; float: right; margin-right: 10px;"   readonly/>
+
+                            </div>
+                            <div id="CGST" style="display: none;">
+                                <label class="text-center  form-control" style=" width: 35%; font-weight: 10; ">CGST</label>
+                                <input type="number"                            
+                                id="CGST_tax_amount"
+                                placeholder='0.00'
+                                class="form-control"
+                                 style="width: 60%; margin-top: -45px; float: right; margin-right: 10px;"   readonly/>
+
+                            </div>
+                            <div id="SGST" style="display: none;">
+                                <label class="text-center  form-control" style=" width: 35%; font-weight: 10; ">SGST</label>
+                                <input type="number"                            
+                                id="SGST_tax_amount"
+                                placeholder='0.00'
+                                class="form-control"
+                                 style="width: 60%; margin-top: -45px; float: right; margin-right: 10px;"   readonly/>
+
+                            </div>
+                            <div>
+                                <label class="text-center  form-control" style=" width: 35%; font-weight: 10; ">Estimate Total</label>
+                                <input type="number"
+                                name='estimatetotal'
+                                id="total_amount"
+                                placeholder='0.00'
+                                class="form-control"
+                                 style="width: 60%; margin-top: -45px; float: right; margin-right: 10px;"   readonly/>
+
+                            </div>
+                            
+                            <!-- <table class="table table-bordered table-hover"
                                    id="tab_logic_total">
                                 <tbody>
                                 <tr>
@@ -435,11 +589,32 @@
                                                                    id="sub_total" readonly/>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <th class="text-center">Tax Amount</th>
+                                <tr id="IGST">
+                                    <th class="text-center">IGST</th>
                                     <td class="text-center"><input type="number"
                                                                    name='taxamount'
                                                                    id="tax_amount"
+                                                                   placeholder='0.00'
+                                                                   class="form-control"
+                                                                   readonly/>
+                                    </td>
+                                </tr>
+
+                                <tr id="CGST" style="display: none;">
+                                    <th class="text-center">CGST</th>
+                                    <td class="text-center"><input type="number"
+                                                                   
+                                                                   id="CGST_tax_amount"
+                                                                   placeholder='0.00'
+                                                                   class="form-control"
+                                                                   readonly/>
+                                    </td>
+                                </tr>
+                                <tr id="SGST" style="display: none;" >
+                                    <th class="text-center">SGST</th>
+                                    <td class="text-center"><input type="number"
+                                                                   
+                                                                   id="CGST_tax_amount"
                                                                    placeholder='0.00'
                                                                    class="form-control"
                                                                    readonly/>
@@ -455,7 +630,7 @@
                                                                    readonly/></td>
                                 </tr>
                                 </tbody>
-                            </table>
+                            </table> -->
                         </div>
                     </div>
                     <div class="row">
@@ -477,10 +652,56 @@
         </div>
         <input type="text" id="hello">
     </form>
+<!-- 
+    modal -->
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="form-group">
+                  <label for="recipient-name" class="col-form-label">Recipient:</label>
+                  <input type="text" class="form-control" id="recipient-name">
+                </div>
+                <div class="form-group">
+                  <label for="message-text" class="col-form-label">Message:</label>
+                  <textarea class="form-control" id="message-text"></textarea>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Send message</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <script>
+        function filtertax(element) {
+            
+            if (element.value == '1' || element.value == '3' || element.value == '5' || element.value == '7'|| element.value == '9' || element.value == '11' || element.value == '13'|| element.value == '0') {
+                document.getElementById('CGST').style.display = 'block';
+                document.getElementById('SGST').style.display = 'block';
+                document.getElementById('IGST').style.display = 'none';
+            } else {
+                document.getElementById('CGST').style.display = 'none';
+                document.getElementById('SGST').style.display = 'none';
+                document.getElementById('IGST').style.display = 'block';
+            }
+        }
+    </script>
     <script>
     
         function showinnum(divId, element) {
-            if (element.value) {
+            if (element.value ) {
                 document.getElementById(divId).innerHTML = "ESTIMATE NO. " + element.value;
             } else {
                 document.getElementById(divId).innerHTML = "ESTIMATE NO. ";

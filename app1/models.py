@@ -674,6 +674,7 @@ class estimate(models.Model):
     total3 = models.CharField(max_length=100, default='')
     tax3 = models.CharField(max_length=100, default='0')
     taxamount = models.CharField(max_length=100, default='')
+    reference_number = models.CharField(max_length=100, default='')
 
 
 class delayedcharge(models.Model):
