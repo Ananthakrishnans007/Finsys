@@ -676,6 +676,10 @@ class estimate(models.Model):
     taxamount = models.CharField(max_length=100, default='')
     reference_number = models.CharField(max_length=100, default='')
     note = models.TextField()
+    IGST = models.CharField(max_length=100)
+    CGST  =  models.CharField(max_length=100)
+    SGST =  models.CharField(max_length=100)
+    TCS =  models.CharField(max_length=100)
 
     def __str__(self):
         return self.customer

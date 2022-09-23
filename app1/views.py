@@ -25636,6 +25636,11 @@ def estcreate2(request):
                         cid=cmp1,
                         reference_number = request.POST['Ref_No'],
                         note = request.POST['Note'],
+
+                        IGST =request.POST['IGST'],
+                        CGST  = request.POST['CGST'],
+                        SGST = request.POST['SGST'],
+                        TCS = request.POST['TCS'],
                         
                         )
         est2.save()
@@ -25700,7 +25705,7 @@ def editestimate(request, id):
 
 @login_required(login_url='regcomp')
 def updateestimate2(request, id):
-    try:
+    if request.method =="POST":
         cmp1 = company.objects.get(id=request.session['uid'])
         upd = estimate.objects.get(estimateid=id, cid=cmp1)
         upd.customer = request.POST['customer']
@@ -25741,10 +25746,16 @@ def updateestimate2(request, id):
         upd.taxamount = request.POST['taxamount']
         upd.reference_number = request.POST['Ref_No']
         upd.note = request.POST['Note']
+        upd.subtotal=request.POST['sub_total'],
+
+        upd.IGST =request.POST['IGST'],
+        upd.CGST  = request.POST['CGST'],
+        upd.SGST = request.POST['SGST'],
+        upd.TCS = request.POST['TCS'],
 
         upd.save()
         return redirect('goestimate')
-    except:
+    else:
         return redirect('goestimate')
 
 

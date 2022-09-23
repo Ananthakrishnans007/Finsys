@@ -569,7 +569,7 @@
                             <div>
                                 
                                 <label class="text-center  form-control" style=" width: 35%; font-weight: 10; background-color: #2f516f; color: white; ">Sub Total</label>
-                                <input type="number"
+                                <input type="number" value="{{estimate.subtotal}}"
                                 name='sub_total'
                                 placeholder='0.00'
                                 class="form-control "
@@ -577,8 +577,8 @@
                             </div>
                             <div id="IGST">  
                                 <label class="text-center  form-control" style=" width: 35%; font-weight: 10; background-color: #2f516f; color: white; " >IGST</label>
-                                <input type="number"
-                                name='taxamount'
+                                <input type="number" value="{{ estimate.IGST }}"
+                                name='IGST'
                                 id="tax_amount"
                                 placeholder='0.00'
                                 class="form-control"
@@ -587,8 +587,9 @@
                             </div>
                             <div id="CGST" style="display: none;">
                                 <label class="text-center  form-control" style=" width: 35%; font-weight: 10; background-color: #2f516f; color: white; ">CGST</label>
-                                <input type="number"                            
+                                <input type="number"    value="{{ estimate.CGST }}"                      
                                 id="CGST_tax_amount"
+                                name='CGST'
                                 placeholder='0.00'
                                 class="form-control"
                                  style="width: 40%; margin-top: -45px; float: right; margin-right: 10px;"   readonly/>
@@ -596,8 +597,9 @@
                             </div>
                             <div id="SGST" style="display: none;">
                                 <label class="text-center  form-control" style=" width: 35%; font-weight: 10; background-color: #2f516f; color: white; ">SGST</label>
-                                <input type="number"                            
+                                <input type="number"    value="{{ estimate.SGST }}"                         
                                 id="SGST_tax_amount"
+                                name='SGST'
                                 placeholder='0.00'
                                 class="form-control"
                                  style="width: 40%; margin-top: -45px; float: right; margin-right: 10px;"   readonly/>
@@ -611,9 +613,9 @@
                                     <option value="" selected>Select a Tax</option>
                                     <option value="1">Cess 1%</option>
                                 </select>
-                                <input type="number"                            
+                                <input type="number"   value="{{ estimate.TCS }}"                          
                                 id="tcs_amount"
-                                placeholder='0.00'
+                                placeholder='0.00' name='TCS'
                                 class="form-control"
                                  style="width: 40%;  float: right; margin-right: 10px; margin-top: -38px; "   readonly/>
 
@@ -621,7 +623,7 @@
 
                             <div style="margin-top: 8px;">
                                 <label class="text-center  form-control" style=" width: 35%; font-weight: 10; background-color: #2f516f; color: white; ">Estimate Total</label>
-                                <input type="number"
+                                <input type="number" value="{{ estimate.estimatetotal }}"   
                                 name='estimatetotal'
                                 id="total_amount"
                                 placeholder='0.00'
