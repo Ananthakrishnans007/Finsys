@@ -156,19 +156,18 @@
             color: white;
         }
     </style>
-    <form action="estcreate2" method="post" class="needs-validation" novalidate>{% csrf_token %}
-        
+    <form action="{% url 'updateestimate2' estimate.estimateid %} " method="post" class="needs-validation" novalidate>
+        {% csrf_token %}
         <div class="page-content">
-            <h2 id="hel"></h2>
             <div class="card radius-15">
                 <div class="card-body">
                     <div class="card-title">
-                        <center><h2 class="mb-0" id="estno">ESTIMATE</h2></center>
+                        <center><h2 class="mb-0" id="estno">ESTIMATE NO.{{ estimate.estimateno }}</h2></center>
                     </div>
                     <hr/>
                 </div>
             </div>
-            <div class="card radius-15">
+            <div class="card">
                 <div class="card-body">
                     <div class="row">
                         <div class="col">
@@ -178,22 +177,7 @@
                     <div class="row mt-3">
                         <div class="col-md-3">
                             <label class="col-form-label">Customer</label>
-                            <div class="d-flex">
-                                <select name="customer" id="select" class="form-control" style="width: 95%;">
-                                    <option value="NIL" selected>Select Customer
-                                    </option>
-                                    {% for cust in customers %}
-                                        {% if cust.cid_id == cmp1.cid %}
-                                            <option text="{{ cust.customerid }}"
-                                                    value="{{ cust.firstname }} {{ cust.lastname }}">{{ cust.firstname }} {{ cust.lastname }}</option>
-                                        {% endif %}
-                                    {% endfor %}
-                                </select>
-                                <a data-toggle="modal" href="#newcust">
-                                    <button type="button" class="btn btn-outline-secondary ml-1">+</button>
-                                </a>
-                            </div>
-
+                            <input name="customer" value="{{ estimate.customer }}" class="form-control">
                         </div>
                         
                         <div class="col-md-3"></div>
@@ -203,34 +187,45 @@
                         <div class="col-md-3">
                             <label class="col-form-label">Billing Address</label>
                             <label for="billingaddress"></label>
-                            <textarea class="form-control" rows="7" id="billin" name="billingaddress"></textarea>
+                            <textarea class="form-control" rows="7"
+                                      name="billingaddress">{{ estimate.billingaddress }}</textarea>
                         </div>
                     </div>
                     <div class="row mt-3">
                         <div class="col-md-3">
                             <label class="col-form-label">Email</label>
-                            <input type="text" class="form-control" id="email" name="email" placeholder="Email">
+                            <input type="text" class="form-control" value="{{ estimate.email }}" name="email"
+                                   placeholder="Email">
                         </div>
                         
                         <div class="col-md-3">
                             <label class="col-form-label">Estimate Date</label>
-                            <input type="date" class="form-control" value="{{ tod }}" name="estimatedate"><br>
+                            <input type="date" class="form-control" value="{{ estimate.estimatedate | date:'Y-m-d'  }}"
+                                   name="estimatedate"><br>
                         </div>
                         <div class="col-md-3">
                             <label class="col-form-label">Expiration Date</label>
-                            <input type="date" class="form-control" name="expirationdate" required><br>
+                            <input type="date" class="form-control" value="{{ estimate.expirationdate | date:'Y-m-d'  }}"
+                                   name="expirationdate"><br>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="col-form-label">Estimate no:</label>
+                            <input type="text" class="form-control" value="{{ estimate.estimateno }}"
+                                   onchange="showinnum('estno', this)"
+                                   name="estimateno">
                         </div>
                         <div class="col-md-3">
                             <label class="col-form-label">Reference Number</label>
-                            <input type="text" class="form-control" name="Ref_No"><br>
+                            <input type="text" class="form-control" name="Ref_No" value="{{ estimate.reference_number }}"><br>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="col-form-label">Place of Supply</label>
+                            <input type="text" class="form-control"
+                                   name="placeofsupply" value="{{ estimate.placeofsupply }}">
                         </div>
                     </div>
                     <div class="row mt-3">
-                        <div class="col-md-3">
-                            <label class="col-form-label">Place of Supply</label>
-                            <input type="text" id="plosu" class="form-control"
-                                   name="placeofsupply">
-                        </div>
+                        
                         <div class="col-md-3"></div>
                         <div class="col-md-3"></div>
                         <div class="col-md-3"></div>
@@ -256,7 +251,8 @@
                                     <td>1</td>
                                     <td>
                                         <select name='product' id="product" class="form-control">
-                                            <option value="NIL" selected>Select Product</option>
+                                            <option value="{{ estimate.product }}"
+                                                selected>{{ estimate.product }}</option>
                                             {% for proinv in inv %}
                                                 {% if proinv.cid_id == cmp1.cid %}
                                                     <option text="{{ proinv.inventoryid }}"
@@ -278,20 +274,20 @@
                                         </select>
                                     </td>
                                     <td><input type="text" name='hsn' id="hsn1"
-                                               placeholder='Enter HSN' class="form-control">
+                                               placeholder='Enter HSN' class="form-control" value="{{ estimate.hsn }}">
                                     </td>
                                     <td><input type="text" name='description' id="description"
                                                placeholder='Enter description'
-                                               class="form-control">
+                                               class="form-control" value="{{ estimate.description }}">
 
                                     </td>
                                     <td>
-                                        <input type="number" name='qty' id="qty1"
+                                        <input type="number" name='qty' id="qty1" value="{{ estimate.qty }}"
                                                placeholder='Enter QTY'
                                                class="form-control qty" step="0" min="0"/>
                                                <span id="qtyspan" class="text-muted"></span>
                                     </td>
-                                    <td><input type="number" name='rate' id="unit1"
+                                    <td><input type="number" name='rate' id="unit1"  value="{{ estimate.rate }}"
                                                placeholder='Enter Rate'
                                                class="form-control price" step="0.00"
                                                min="0"/>
@@ -324,7 +320,7 @@
 
 
 
-                                    <td><input type="number" name='total' id="total" placeholder='0.00'
+                                    <td><input type="number" name='total' id="total" placeholder='0.00' value="{{ estimate.total }}"
                                                class="form-control total" readonly/></td>
                                     
                                     <td style="display: none;"><input type="number" name='taxamount' id="taxamount"
@@ -333,7 +329,8 @@
                                     <td>2</td>
                                     <td>
                                         <select name='product1' id="product2" class="form-control">
-                                            <option value="NIL" selected>Select Product</option>
+                                            <option value="{{ estimate.product1 }}"
+                                                selected>{{ estimate.product1 }}</option>
                                             {% for proinv in inv %}
                                                 {% if proinv.cid_id == cmp1.cid %}
                                                     <option text="{{ proinv.inventoryid }}"
@@ -355,18 +352,18 @@
                                         </select>
                                         {#                                        <button type="button" class="btn btn-outline-secondary ml-1">+</button>#}
                                     </td>
-                                    <td><input type="text" name='hsn1' id="hsn2"
+                                    <td><input type="text" name='hsn1' id="hsn2" value="{{ estimate.hsn1 }}"
                                                placeholder='Enter HSN' class="form-control">
                                     </td>
-                                    <td><input type="text" name='description1' id="description2"
+                                    <td><input type="text" name='description1' id="description2"  value="{{ estimate.description1 }}"
                                                placeholder='Enter description'
                                                class="form-control"></td>
-                                    <td><input type="number" name='qty1' id="qty2"
+                                    <td><input type="number" name='qty1' id="qty2" value="{{ estimate.qty1 }}"
                                                placeholder='Enter QTY'
                                                class="form-control qty" step="0" min="0"/>
                                                <span id="qtyspan1" class="text-muted"></span>
                                     </td>
-                                    <td><input type="number" name='rate1' id="unit2"
+                                    <td><input type="number" name='rate1' id="unit2" value="{{ estimate.rate1 }}"
                                                placeholder='Enter Rate'
                                                class="form-control price" step="0.00"
                                                min="0"/>
@@ -396,7 +393,7 @@
                                             <option value="0">Out of Scope(0%)</option>
                                         </select>
                                     </td>
-                                    <td><input type="number" name='total1' id="total2"
+                                    <td><input type="number" name='total1' id="total2" value="{{ estimate.total1 }}"
                                                placeholder='0.00' class="form-control total"
                                                readonly/></td>
                                     
@@ -406,7 +403,8 @@
                                     <td>3</td>
                                     <td>
                                         <select name='product2' id="product3" class="form-control">
-                                            <option value="NIL" selected>Select Product</option>
+                                            <option value="{{ estimate.product2 }}"
+                                                selected>{{ estimate.product2 }}</option>
                                             {% for proinv in inv %}
                                                 {% if proinv.cid_id == cmp1.cid %}
                                                     <option text="{{ proinv.inventoryid }}"
@@ -428,18 +426,18 @@
                                         </select>
                                         {#                                        <button type="button" class="btn btn-outline-secondary ml-1">+</button>#}
                                     </td>
-                                    <td><input type="text" name='hsn2' id="hsn3"
+                                    <td><input type="text" name='hsn2' id="hsn3" value="{{ estimate.hsn2 }}"
                                                placeholder='Enter HSN' class="form-control">
                                     </td>
-                                    <td><input type="text" name='description2' id="description3"
+                                    <td><input type="text" name='description2' id="description3" value="{{ estimate.description2 }}"
                                                placeholder='Enter description'
                                                class="form-control"></td>
-                                    <td><input type="number" name='qty2' id="qty3"
+                                    <td><input type="number" name='qty2' id="qty3" value="{{ estimate.qty2 }}"
                                                placeholder='Enter QTY &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
                                                class="form-control qty" step="0" min="0"/>
                                                <span id="qtyspan2" class="text-muted"></span>
                                     </td>
-                                    <td><input type="number" name='rate2' id="unit3"
+                                    <td><input type="number" name='rate2' id="unit3" value="{{ estimate.rate2 }}"
                                                placeholder='Enter Rate'
                                                class="form-control price" step="0.00"
                                                min="0"/>
@@ -470,7 +468,7 @@
                                         </select>
                                     </td>
 
-                                    <td><input type="number" name='total2' id="total3"
+                                    <td><input type="number" name='total2' id="total3" value="{{ estimate.total2 }}"
                                                placeholder='0.00' class="form-control total"
                                                readonly/></td>
                                     
@@ -480,7 +478,8 @@
                                     <td>4</td>
                                     <td>
                                         <select name='product3' id="product4" class="form-control">
-                                            <option value="NIL" selected>Select Product</option>
+                                            <option value="{{ estimate.product3 }}"
+                                                selected>{{ estimate.product3 }}</option>
                                             {% for proinv in inv %}
                                                 {% if proinv.cid_id == cmp1.cid %}
                                                     <option text="{{ proinv.inventoryid }}"
@@ -502,18 +501,18 @@
                                         </select>
                                         {#                                        <button type="button" class="btn btn-outline-secondary ml-1">+</button>#}
                                     </td>
-                                    <td><input type="text" name='hsn3' id="hsn4"
+                                    <td><input type="text" name='hsn3' id="hsn4" value="{{ estimate.hsn3 }}"
                                                placeholder='Enter HSN' class="form-control">
                                     </td>
-                                    <td><input type="text" name='description3' id="description4"
+                                    <td><input type="text" name='description3' id="description4"  value="{{ estimate.description3 }}"
                                                placeholder='Enter description'
                                                class="form-control"></td>
-                                    <td><input type="number" name='qty3' id="qty4"
+                                    <td><input type="number" name='qty3' id="qty4" value="{{ estimate.qty3 }}"
                                                placeholder='Enter QTY'
                                                class="form-control qty" step="0" min="0"/>
                                                <span id='qtyspan3' class="text-muted"></span>
                                     </td>
-                                    <td><input type="number" name='rate3' id="unit4"
+                                    <td><input type="number" name='rate3' id="unit4"  value="{{ estimate.rate3 }}"
                                                placeholder='Enter Rate'
                                                class="form-control price" step="0.00"
                                                min="0"/>
@@ -542,7 +541,7 @@
                                             <option value="0">Out of Scope(0%)</option>
                                         </select>
                                     </td>
-                                    <td><input type="number" name='total3' id="total4"
+                                    <td><input type="number" name='total3' id="total4"  value="{{ estimate.total3 }}"
                                                placeholder='0.00' class="form-control total"
                                                readonly/></td>
                                     
@@ -558,7 +557,7 @@
                     <div class="row clearfix" style="margin-top:20px">
                         <div class="col-md-6">
 
-                            <textarea class="form-control"  id="" name="Note" placeholder="Note" style="height: 190px;"></textarea>
+                            <textarea class="form-control"  id="" name="Note" placeholder="Note" style="height: 190px;"value="{{ estimate.total3 }}">{{ estimate.note }}</textarea>
 
 
                         </div>

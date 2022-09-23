@@ -180,7 +180,7 @@ urlpatterns = [
     re_path(r'^delayed$', views.delayed, name='delayed'),
     re_path(r'^delcreate$', views.delcreate, name='delcreate'),
     re_path(r'^editestimate/(?P<id>\d+)$', views.editestimate, name='editestimate'),
-    re_path(r'^editestimate/updateestimate/(?P<id>\d+)$', views.updateestimate, name='updateestimate'),
+    # re_path(r'^editestimate/updateestimate/(?P<id>\d+)$', views.updateestimate, name='updateestimate'),
     re_path(r'^deleteestimate/(?P<id>\d+)$', views.deleteestimate, name='deleteestimate'),
     re_path(r'^editdelayed/(?P<id>\d+)$', views.editdelayed, name='editdelayed'),
     re_path(r'^editdelayed/delayedupdate/(?P<id>\d+)$', views.delayedupdate, name='delayedupdate'),
@@ -362,9 +362,19 @@ urlpatterns = [
 
     path('estindex2',views.estindex2,name='estindex2'),
 
+    path('estcreate2',views.estcreate2,name='estcreate2'),
+
+    path('new_customers',views.new_customers,name='new_customers'),
+
+    path('updateestimate2/<int:id>',views.updateestimate2,name='updateestimate2'),
+
+    path('search_estimate',views.search_estimate,name='search_estimate'),
+
     
 
-    path('estcreate2',views.estcreate2,name='estcreate2'),
+
+
+    
 
     
 

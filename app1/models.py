@@ -639,8 +639,8 @@ class estimate(models.Model):
     customer = models.CharField(max_length=100)
     email = models.EmailField(max_length=100)
     billingaddress = models.CharField(max_length=100)
-    estimatedate = models.CharField(max_length=100)
-    expirationdate = models.CharField(max_length=100)
+    estimatedate = models.DateField()
+    expirationdate = models.DateField()
     estimateno = models.CharField(max_length=100)
     placeofsupply = models.CharField(max_length=100)
     product = models.CharField(max_length=100)
@@ -675,6 +675,11 @@ class estimate(models.Model):
     tax3 = models.CharField(max_length=100, default='0')
     taxamount = models.CharField(max_length=100, default='')
     reference_number = models.CharField(max_length=100, default='')
+    note = models.TextField()
+
+    def __str__(self):
+        return self.customer
+
 
 
 class delayedcharge(models.Model):

@@ -8902,78 +8902,6 @@ def delcreate(request):
         return redirect('gosalesrecords')
 
 
-@login_required(login_url='regcomp')
-def editestimate(request, id):
-    try:
-        cmp1 = company.objects.get(cid=request.session['uid'])
-        edt = estimate.objects.get(estimateid=id, cid=cmp1)
-        inv = inventory.objects.filter(cid=cmp1).all()
-        bun = bundle.objects.filter(cid=cmp1).all()
-        noninv = noninventory.objects.filter(cid=cmp1).all()
-        ser = service.objects.filter(cid=cmp1).all()
-        context = {'estimate': edt, 'cmp1': cmp1, 'inv': inv,
-                   'noninv': noninv, 'bun': bun, 'ser': ser}
-        return render(request, 'app1/edit.html', context)
-    except:
-        return redirect('gosalesrecords')
-
-
-@login_required(login_url='regcomp')
-def updateestimate(request, id):
-    try:
-        cmp1 = company.objects.get(id=request.session['uid'])
-        upd = estimate.objects.get(estimateid=id, cid=cmp1)
-        upd.customer = request.POST['customer']
-        upd.email = request.POST['email']
-        upd.billingaddress = request.POST['billingaddress']
-        upd.estimatedate = request.POST['estimatedate']
-        upd.expirationdate = request.POST['expirationdate']
-        upd.placeofsupply = request.POST['placeofsupply']
-        upd.product = request.POST['product']
-        upd.hsn = request.POST['hsn']
-        upd.description = request.POST['description']
-        upd.qty = request.POST['qty']
-        upd.rate = request.POST['rate']
-        upd.tax = request.POST['tax']
-        upd.total = request.POST['total']
-        upd.estimatetotal = request.POST['estimatetotal']
-        upd.product1 = request.POST['product1']
-        upd.hsn1 = request.POST['hsn1']
-        upd.description1 = request.POST['description1']
-        upd.qty1 = request.POST['qty1']
-        upd.rate1 = request.POST['rate1']
-        upd.total1 = request.POST['total1']
-        upd.tax1 = request.POST['tax1']
-        upd.product2 = request.POST['product2']
-        upd.hsn2 = request.POST['hsn2']
-        upd.description2 = request.POST['description2']
-        upd.qty2 = request.POST['qty2']
-        upd.rate2 = request.POST['rate2']
-        upd.total2 = request.POST['total2']
-        upd.tax2 = request.POST['tax2']
-        upd.product3 = request.POST['product3']
-        upd.hsn3 = request.POST['hsn3']
-        upd.description3 = request.POST['description3']
-        upd.qty3 = request.POST['qty3']
-        upd.rate3 = request.POST['rate3']
-        upd.total3 = request.POST['total3']
-        upd.tax3 = request.POST['tax3']
-        upd.taxamount = request.POST['taxamount']
-        upd.save()
-        return redirect('gosalesrecords')
-    except:
-        return redirect('gosalesrecords')
-
-
-@login_required(login_url='regcomp')
-def deleteestimate(request, id):
-    try:
-        cmp1 = company.objects.get(id=request.session['uid'])
-        upd = estimate.objects.get(estimateid=id, cid=cmp1)
-        upd.delete()
-        return redirect('gosalesrecords')
-    except:
-        return redirect('gosalesrecords')
 
 
 @login_required(login_url='regcomp')
@@ -25688,7 +25616,7 @@ def estindex2(request):
 
 @login_required(login_url='regcomp')
 def estcreate2(request):
-    try:
+    if request.method == 'POST':
         cmp1 = company.objects.get(id=request.session["uid"])
         est2 = estimate(customer=request.POST['customer'], email=request.POST['email'], billingaddress=request.POST['billingaddress'], estimatedate=request.POST['estimatedate'], expirationdate=request.POST['expirationdate'], placeofsupply=request.POST['placeofsupply'],
                         estimateno='1000', product=request.POST['product'], description=request.POST['description'],
@@ -25706,13 +25634,160 @@ def estcreate2(request):
                         description3=request.POST['description3'], rate3=request.POST[
                             'rate3'], total3=request.POST['total3'], tax3=request.POST['tax3'],
                         cid=cmp1,
-                        reference_number = request.POST['Ref_No'])
+                        reference_number = request.POST['Ref_No'],
+                        note = request.POST['Note'],
+                        
+                        )
         est2.save()
         est2.estimateno = int(est2.estimateno) + est2.estimateid
         est2.save()
+        return redirect('goestimate')
+    
+    return redirect('goestimate')
+
+
+@login_required(login_url='regcomp')
+def new_customers(request):
+    try:
+        cmp1 = company.objects.get(id=request.session["uid"])
+        if request.method == "POST":
+            firstname = request.POST['firstname']
+            lastname = request.POST['lastname']
+            if customer.objects.filter(firstname=firstname, lastname=lastname, cid=cmp1).exists():
+                messages.info(request,
+                              f"Customer {firstname} {lastname} already exists. Please provide a different name.")
+                return redirect('gocustomers')
+            else:
+                customer1 = customer(title=request.POST['title'], firstname=request.POST['firstname'],
+                                     lastname=request.POST['lastname'], company=request.POST['company'],
+                                     location=request.POST['location'], gsttype=request.POST['gsttype'],
+                                     gstin=request.POST['gstin'], panno=request.POST['panno'],
+                                     email=request.POST['email'],
+                                     website=request.POST['website'], mobile=request.POST['mobile'],
+                                     street=request.POST['street'], city=request.POST['city'],
+                                     state=request.POST['state'],
+                                     pincode=request.POST['pincode'], country=request.POST['country'],
+                                     shipstreet=request.POST['shipstreet'], shipcity=request.POST['shipcity'],
+                                     shipstate=request.POST['shipstate'],
+                                     shippincode=request.POST['shippincode'], shipcountry=request.POST['shipcountry'],
+                                     cid=cmp1)
+
+                customer1.save()
+                return redirect('/app1/estindex2')
+        customers = customer.objects.filter(cid=cmp1).all()
+        context = {'customers': customers, 'cmp1': cmp1}
+        return render(request, 'app1/customers.html', context)
+    except:
+        return redirect('estindex2')
+
+
+
+@login_required(login_url='regcomp')
+def editestimate(request, id):
+    try:
+        cmp1 = company.objects.get(cid=request.session['uid'])
+        edt = estimate.objects.get(estimateid=id, cid=cmp1)
+        inv = inventory.objects.filter(cid=cmp1).all()
+        bun = bundle.objects.filter(cid=cmp1).all()
+        noninv = noninventory.objects.filter(cid=cmp1).all()
+        ser = service.objects.filter(cid=cmp1).all()
+        context = {'estimate': edt, 'cmp1': cmp1, 'inv': inv,
+                   'noninv': noninv, 'bun': bun, 'ser': ser}
+        return render(request, 'app1/edit_estimate.html', context)
+    except:
+        return redirect('goestimate')
+
+
+@login_required(login_url='regcomp')
+def updateestimate2(request, id):
+    try:
+        cmp1 = company.objects.get(id=request.session['uid'])
+        upd = estimate.objects.get(estimateid=id, cid=cmp1)
+        upd.customer = request.POST['customer']
+        upd.email = request.POST['email']
+        upd.billingaddress = request.POST['billingaddress']
+        upd.estimatedate = request.POST['estimatedate']
+        upd.expirationdate = request.POST['expirationdate']
+        upd.placeofsupply = request.POST['placeofsupply']
+        upd.product = request.POST['product']
+        upd.hsn = request.POST['hsn']
+        upd.description = request.POST['description']
+        upd.qty = request.POST['qty']
+        upd.rate = request.POST['rate']
+        upd.tax = request.POST['tax']
+        upd.total = request.POST['total']
+        upd.estimatetotal = request.POST['estimatetotal']
+        upd.product1 = request.POST['product1']
+        upd.hsn1 = request.POST['hsn1']
+        upd.description1 = request.POST['description1']
+        upd.qty1 = request.POST['qty1']
+        upd.rate1 = request.POST['rate1']
+        upd.total1 = request.POST['total1']
+        upd.tax1 = request.POST['tax1']
+        upd.product2 = request.POST['product2']
+        upd.hsn2 = request.POST['hsn2']
+        upd.description2 = request.POST['description2']
+        upd.qty2 = request.POST['qty2']
+        upd.rate2 = request.POST['rate2']
+        upd.total2 = request.POST['total2']
+        upd.tax2 = request.POST['tax2']
+        upd.product3 = request.POST['product3']
+        upd.hsn3 = request.POST['hsn3']
+        upd.description3 = request.POST['description3']
+        upd.qty3 = request.POST['qty3']
+        upd.rate3 = request.POST['rate3']
+        upd.total3 = request.POST['total3']
+        upd.tax3 = request.POST['tax3']
+        upd.taxamount = request.POST['taxamount']
+        upd.reference_number = request.POST['Ref_No']
+        upd.note = request.POST['Note']
+
+        upd.save()
         return redirect('goestimate')
     except:
         return redirect('goestimate')
 
 
+@login_required(login_url='regcomp')
+def deleteestimate(request, id):
+    try:
+        cmp1 = company.objects.get(id=request.session['uid'])
+        upd = estimate.objects.get(estimateid=id, cid=cmp1)
+        upd.delete()
+        return redirect('goestimate')
+    except:
+        return redirect('goestimate')
 
+
+def search_estimate(request):
+    if request.method == "POST":
+        cmp1 = company.objects.get(id=request.session["uid"])
+        search = request.POST['search']
+        cloumn = request.POST['type']
+
+        if cloumn == '1' or search  == '':
+            return redirect('goestimate')    
+
+        else :
+            if cloumn == '2':
+                cmp1 = company.objects.get(id=request.session["uid"])
+                est1 = estimate.objects.filter(cid=cmp1,customer=search).all()
+
+                context = {
+                            'est1' :est1,
+                            'cmp1': cmp1
+                                }
+                return render(request,'app1/goestimate.html',context)
+            else:
+                if cloumn == '3':
+                    cmp1 = company.objects.get(id=request.session["uid"])
+                    est1 = estimate.objects.filter(cid=cmp1,estimateno=search).all()
+
+                    context = {
+                            'est1' :est1,
+                            'cmp1': cmp1
+                                }
+                    return render(request,'app1/goestimate.html',context)        
+   
+    
+    return redirect('goestimate')

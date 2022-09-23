@@ -75,7 +75,7 @@ body{
                         
                         <div class="col-md-5">
                             <div class="wrap" style="width: 60%; margin-top: 8px;">
-                                <form action="{% url 'gosearch' %}" method="POST">{% csrf_token %}
+                                <form action="search_estimate" method="POST">{% csrf_token %}
                                 <div class="search">
                                     
                                    <input type="text" class="searchTerm" name="search">
@@ -93,9 +93,9 @@ body{
                             <select class="form-control btn btn-outline-info dropdown-toggle text-grey" aria-label=".form-select-lg example" style="width: 40%; margin-top: 8px;" name="type">
                                 
                                 <option value="1" selected>All</option>
-                                <option value="2" >Name</option>
-                                <option value="3" >Active</option>
-                                <option value="4" >Inactive</option>
+                                <option value="2" >Coustomer Name</option>
+                                <option value="3" >Estimate No</option>
+                                
                                 
                                 
                               </select>
@@ -126,7 +126,7 @@ body{
                                 <th style="text-align: center;">Estimate No</th>
                                 <th style="text-align: center;">Reference Number</th>
                                 <th style="text-align: center;">Coustomer Name</th>
-                                <th style="text-align: center;">Status</th>
+                                <!-- <th style="text-align: center;">Status</th> -->
                                 <th style="text-align: center;">Amount</th>
                                 <th style="text-align: center;">ACTION</th>
                             </tr>
@@ -135,11 +135,11 @@ body{
                                 {% for estimate in est1 %}
                                 {% if estimate.cid_id == cmp1.cid %}
                                     <tr>
-                                        <th style="text-align: center;">{{ estimate.estimatedate }}</th>
+                                        <th style="text-align: center;">{{ estimate.estimatedate | date:'d-m-Y' }}</th>
                                         <td style="text-align: center;">{{ estimate.estimateno }}</td>
                                         <td style="text-align: center;"> {{ estimate.reference_number }}</td>
                                         <td style="text-align: center;">{{ estimate.customer }}</td>
-                                        <td style="text-align: center;"></td>
+                                        <!-- <td style="text-align: center;"></td> -->
                                         <td style="text-align: center;">{{ estimate.estimatetotal }}</td>
                                         <td style="text-align: center;">
                                             <div class="dropdown">
@@ -152,7 +152,8 @@ body{
                                                             class="bx bx-edit"><b>EDIT</b></i></a>
                                                     <a href="deleteestimate/{{ estimate.estimateid }}" class="dropdown-item"
                                                        style="color:black; font-size: 15px;"><i
-                                                            class="bx bx-trash"><b>DELETE</b></i></a>
+                                                            class="bx bx-trash"><b>DELETE</b></i>
+                                                            <input name="_method" type="hidden" value="DELETE"></a>
                                                 </div>
                                             </div>
                                         </td>
@@ -192,6 +193,9 @@ body{
                 }
             }
         </script>
+
+
+
         
         
        
