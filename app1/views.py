@@ -25802,3 +25802,17 @@ def search_estimate(request):
    
     
     return redirect('goestimate')
+
+
+def estimate_view(request,id):
+    cmp1 = company.objects.get(id=request.session['uid'])
+    upd = estimate.objects.get(estimateid=id, cid=cmp1)
+
+    context ={
+        'estimate':upd,
+        'cmp1':cmp1
+
+    }
+
+
+    return render(request,'app1/estimate_view.html',context)

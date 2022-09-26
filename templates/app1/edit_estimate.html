@@ -143,6 +143,18 @@
             
         }
 
+        function calc_roundoff(){
+
+        var amount =taxamount + total + tcs
+
+        let x =Math.round(amount)
+
+        $('#round_off').val((x).toFixed(2));
+        $('#total_amount').val((x).toFixed(2));
+
+
+}
+
 
 
 
@@ -618,6 +630,18 @@
                                 placeholder='0.00' name='TCS'
                                 class="form-control"
                                  style="width: 40%;  float: right; margin-right: 10px; margin-top: -38px; "   readonly/>
+
+                            </div>
+
+                            <div style="margin-top: 8px;">
+                                <a class=" btn text-center  form-control" style=" width: 35%; font-weight: 10; background-color: #2f516f; color: white; " onclick="calc_roundoff()">
+                                    Round off</a>
+                                <input type="number"
+                                name=''
+                                id="round_off"
+                                placeholder='0.00'
+                                class="form-control"
+                                 style="width: 40%; margin-top: px; float: right; margin-right: 10px;"   readonly/>
 
                             </div>
 

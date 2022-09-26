@@ -1,0 +1,286 @@
+{% extends 'app1/base.html' %}
+{% block body %}
+
+
+    {% load static %}
+    {% if user.is_authenticated %}
+
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/css/estimate.css' %}">
+
+    <style>
+
+        #div1{
+            /* background-color: rgb(0, 255, 21); */
+            width: 33.33%;
+            float: left;
+            height: 100px;
+            text-align: left;
+        }
+        #div2{
+            /* background-color: rgb(204, 0, 255); */
+            width: 33.33%;
+            margin: auto;
+            height: 100px;
+            text-align: left;
+        }
+        #div3{
+            /* background-color: rgb(255, 162, 0); */
+            width: 33.33%;
+            
+            float: right;
+            margin-top: -100px;
+            height: 100px;
+           
+            
+            
+        }
+
+    </style>
+
+    
+
+    
+
+    <div class="page-content">
+
+        <div class="card radius-15">
+            <div class="card-body">
+                <div class="card-title">
+                    <center><h2 class="mb-0">ESTIMATE VIEW</h2></center>
+                    <hr>
+                </div>
+            </div>
+        </div>
+        
+
+        
+        
+                <div class="my-5 page" size="A4">
+                    <div class="p-5">
+                        <section class="top-content bb d-flex justify-content-between">
+                            <div class="logo">
+                                <img src="logo.png" alt="" class="img-fluid">
+                            </div>
+                            <div class="top-left">
+                                <div class="graphic-path">
+                                    <p>Estimate</p>
+                                </div>
+                                <div class="position-relative">
+                                    <p>Estimate No. <span>{{estimate.estimateno }}</span></p>
+                                </div>
+                            </div>
+                        </section>
+            
+                        <section class="store-user mt-5">
+                            <div class="col-12">
+                                <div class="row bb pb-3">
+                                    <div class="col-7">
+                                        <p>FROM,</p>
+                                        <h5>{{cmp1.cname }}</h5>
+                                        <p class="address "> {{cmp1.caddress}}<br>
+                                            {{cmp1.city}},
+                                            {{cmp1.state}}<br>
+                                            {{cmp1.pincode}}<br>
+                                        
+                                        </p>
+                                        
+                                    </div>
+                                    <div class="col-5">
+                                        <p>TO,</p>
+                                        <h5>{{estimate.customer}}</h5>
+                                        <p class="address col-7" > {{ estimate.billingaddress}} </p>
+                                        
+                                    </div>
+                                </div>
+                                <div class="row extra-info pt-3">
+                                    <div class="col-7">
+                                        <p>Estimate Date: <span>{{estimate.estimatedate | date:'d-m-Y'}}</span></p>
+                                    </div>
+                                    <div class="col-5">
+                                        <p>Expiration Date : <span>{{estimate.expirationdate | date:'d-m-Y'}}</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+            
+                        <section class="product-area mt-4">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <td>Item Description</td>
+                                        <td>Price</td>
+                                        <td>Quantity</td>
+                                        <td>Total</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    
+                                    <tr>
+                                        <td>
+                                            <div class="media">
+                                                
+                                                <div class="media-body">
+                                                    <p class="mt-0 title" style="color:black">{{estimate.product}}</p>
+                                                    <span style="color:black">{{estimate.description}}</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td style="color:black">{{estimate.rate}}</td>
+                                        <td style="color:black">{{estimate.qty}}</td>
+                                        <td style="color:black">{{estimate.total}}</td>
+                                    </tr>
+                                    
+
+                                    {% if estimate.product1 == NIL  %}
+                                    <tr>
+                                        <td>
+                                            <div class="media">
+                                                
+                                                <div class="media-body">
+                                                    <p class="mt-0 title" style="color:black">{{estimate.product1}}</p>
+                                                    <span style="color:black">{{estimate.description1}}</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td style="color:black">{{estimate.rate1}}</td>
+                                        <td style="color:black">{{estimate.qty1}}</td>
+                                        <td style="color:black">{{estimate.total1}}</td>
+                                    </tr>
+                                    {% endif %}
+
+                                    {% if estimate.product2 == NIL  %}
+                                    <tr>
+                                        <td>
+                                            <div class="media">
+                                                
+                                                <div class="media-body">
+                                                    <p class="mt-0 title" style="color:black">{{estimate.product2}}</p>
+                                                    <span style="color:black">{{estimate.description2}}</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td style="color:black">{{estimate.rate2}}</td>
+                                        <td style="color:black">{{estimate.qty2}}</td>
+                                        <td style="color:black">{{estimate.total2}}</td>
+                                    </tr>
+                                    {% endif %}
+                                    {% if estimate.product3 == NIL  %}
+
+                                    <tr>
+                                        <td>
+                                            <div class="media">
+                                                
+                                                <div class="media-body">
+                                                    <p class="mt-0 title" style="color:black">{{estimate.product3}}</p>
+                                                    <span style="color:black">{{estimate.description3}}</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td style="color:black">{{estimate.rate3}}</td>
+                                        <td style="color:black">{{estimate.qty3}}</td>
+                                        <td style="color:black">{{estimate.total3}}</td>
+                                    </tr>
+
+                                    {% endif %}
+
+
+
+
+                                    
+                                </tbody>
+                            </table>
+                        </section>
+            
+                        <section class="balance-info">
+                            <div class="row">
+                                <div class="col-8">
+                                    <p class="m-0 font-weight-bold" style="color:black"> Note: </p>
+                                    <p style="color:black">{{estimate.note}}</p>
+                                </div>
+                                <div class="col-4">
+                                    <table class="table border-0 table-hover">
+                                        <tr >
+                                            <td style="color:black">Sub Total :</td>
+                                            <td style="color:black">{{estimate.subtotal}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="color:black">IGST :</td>
+                                            <td style="color:black">{{estimate.IGST}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="color:black">CGST :</td>
+                                            <td style="color:black">{{estimate.CGST}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="color:black">SGST:</td>
+                                            <td style="color:black">{{estimate.SGST}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="color:black">TCS:</td>
+                                            <td style="color:black">{{estimate.TCS}}</td>
+                                        </tr>
+                                        
+                                        <tfoot>
+                                            <tr>
+                                                <td style="color:black">Estimate Total:</td>
+                                                <td style="color:black ;">{{estimate.estimatetotal}}</td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+            
+                                    <!-- Signature -->
+                                    <!-- <div class="col-12">
+                                        <img src="signature.png" class="img-fluid" alt="">
+                                        <p class="text-center m-0" style="color:black"> Director Signature </p>
+                                    </div> -->
+                                </div>
+                            </div>
+                        </section>
+            
+                        <!-- Cart BG -->
+                        <img src="cart.jpg" class="img-fluid cart-bg" alt="">
+            
+                        <!-- <footer>
+                            <hr>
+                            <p class="m-0 text-center">
+                                View THis Invoice Online At - <a href="#!"> invoice/saburbd.com/#868 </a>
+                            </p>
+                            <div class="social pt-3">
+                                <span class="pr-2">
+                                    <i class="fas fa-mobile-alt"></i>
+                                    <span>0123456789</span>
+                                </span>
+                                <span class="pr-2">
+                                    <i class="fas fa-envelope"></i>
+                                    <span>me@saburali.com</span>
+                                </span>
+                                <span class="pr-2">
+                                    <i class="fab fa-facebook-f"></i>
+                                    <span>/sabur.7264</span>
+                                </span>
+                                <span class="pr-2">
+                                    <i class="fab fa-youtube"></i>
+                                    <span>/abdussabur</span>
+                                </span>
+                                <span class="pr-2">
+                                    <i class="fab fa-github"></i>
+                                    <span>/example</span>
+                                </span>
+                            </div>
+                        </footer> -->
+                    </div>
+                </div>
+
+               
+            
+        
+            </div>
+
+
+        
+
+
+
+    {% endif %}
+    {% endblock %}    

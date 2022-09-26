@@ -370,6 +370,8 @@ urlpatterns = [
 
     path('search_estimate',views.search_estimate,name='search_estimate'),
 
+    path('estimate_view/<int:id>',views.estimate_view,name='estimate_view'),
+
     
 
 

@@ -43,33 +43,46 @@
                     var tax = $(this).find('.tax').val();
 
                     
+                    temp=0
                    
                     if (tax ==1)
+                        
                         tax=28
+                        temp=1
                     if (tax ==2)
                         tax=28 
                     if (tax ==3)
-                        tax=18      
+                        tax=18 
+                        temp=1     
                     if (tax ==4)
                         tax=18
                     if (tax ==5)
+                        
                         tax=12 
+                        temp=1 
                     if (tax ==6)
                         tax=12
                     if (tax ==7)
+                        
                         tax=6 
+                        temp=1 
                     if (tax ==8)
                         tax=6
                     if (tax ==9)
+                        
                         tax=5
                     if (tax ==10)
                         tax=5 
                     if (tax ==11)
+                        
                         tax=3
+                        temp=1 
                     if (tax ==12)
                         tax=3
                     if (tax ==13)
+                        
                         tax=.25
+                        temp=1 
                     if (tax ==14)
                         tax=.25
                     if (tax ==0)
@@ -111,6 +124,8 @@
             
             
             $('#sub_total').val(total.toFixed(2));
+
+            
             $('#tax_amount').val(taxamount.toFixed(2));
             
             $('#CGST_tax_amount').val((taxamount/2).toFixed(2));
@@ -121,8 +136,16 @@
 
             tax_sum = total / 100 * $('#tax').val();
             
-            
+            if (temp==0)
+                
+                $('#CGST_tax_amount').val((0).toFixed(2));
+                $('#SGST_tax_amount').val((0).toFixed(2));
+                
 
+            if (temp==1)
+                $('#tax_amount').val((0).toFixed(2));
+                $('#CGST_tax_amount').val((taxamount/2).toFixed(2));
+                $('#SGST_tax_amount').val((taxamount/2).toFixed(2));
 
 
 
@@ -139,10 +162,29 @@
             $('#tcs_amount').val(((a/100) *total).toFixed(2));
 
             $('#total_amount').val((taxamount + total + tcs).toFixed(2));
+
             
+
+
+
             
         }
 
+        function calc_roundoff(){
+
+            var amount =taxamount + total + tcs
+
+            let x =Math.round(amount)
+
+            $('#round_off').val((x).toFixed(2));
+            $('#total_amount').val((x).toFixed(2));
+
+
+        }
+
+
+
+       
 
 
 
@@ -154,7 +196,9 @@
             border: 0;
             border-radius: 5px;
             color: white;
+
         }
+   
     </style>
     <form action="estcreate2" method="post" class="needs-validation" novalidate>{% csrf_token %}
         
@@ -624,6 +668,18 @@
                             </div>
 
                             <div style="margin-top: 8px;">
+                                <a class=" btn text-center  form-control" style=" width: 35%; font-weight: 10; background-color: #2f516f; color: white; " onclick="calc_roundoff()">
+                                    Round off</a>
+                                <input type="number"
+                                name=''
+                                id="round_off"
+                                placeholder='0.00'
+                                class="form-control"
+                                 style="width: 40%; margin-top: px; float: right; margin-right: 10px;"   readonly/>
+
+                            </div>
+
+                            <div style="margin-top: 8px;">
                                 <label class="text-center  form-control" style=" width: 35%; font-weight: 10; background-color: #2f516f; color: white; ">Estimate Total</label>
                                 <input type="number"
                                 name='estimatetotal'
@@ -640,7 +696,7 @@
                     <div class="row">
                         <div class="col-md-10"></div>
                         <div class="col-md-2">
-                            <button type="submit" class="btn btn-outline-info w-100 text-light rounded-pill ">Save
+                            <button type="submit" class="btn btn-outline-info w-100 text-light rounded-pill ">Save To Draft
                             </button>
                         </div>
                     </div>

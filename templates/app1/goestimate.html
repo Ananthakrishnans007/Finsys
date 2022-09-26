@@ -4,8 +4,7 @@
 
     {% load static %}
     {% if user.is_authenticated %}
-<!-- 
-    <link rel="stylesheet" href="{% static 'assets/css/search.css' %}"/> -->
+
   
       <style>
         @import url(https://fonts.googleapis.com/css?family=Open+Sans);
@@ -30,6 +29,7 @@ body{
   border-radius: 5px 0 0 5px;
   outline: none;
   color: #9DBFAF;
+  
 }
 
 .searchTerm:focus{
@@ -46,6 +46,13 @@ body{
   border-radius: 0 5px 5px 0;
   cursor: pointer;
   font-size: 20px;
+}
+
+.table-row{
+        cursor:pointer;
+}
+.table-row:hover{
+    background-color: rgb(216, 155, 51);
 }
 
 /*Resize the wrap to see the search bar change!*/
@@ -126,22 +133,22 @@ body{
                                 <th style="text-align: center;">Estimate No</th>
                                 <th style="text-align: center;">Reference Number</th>
                                 <th style="text-align: center;">Coustomer Name</th>
-                                <!-- <th style="text-align: center;">Status</th> -->
+                                <th style="text-align: center;">Status</th>
                                 <th style="text-align: center;">Amount</th>
-                                <th style="text-align: center;">ACTION</th>
+                                <!-- <th style="text-align: center;">ACTION</th> -->
                             </tr>
                             </thead>
                             <tbody>
                                 {% for estimate in est1 %}
                                 {% if estimate.cid_id == cmp1.cid %}
-                                    <tr>
+                                    <tr tr class="table-row " data-href="{% url 'estimate_view' estimate.estimateid %}" >
                                         <th style="text-align: center;">{{ estimate.estimatedate | date:'d-m-Y' }}</th>
                                         <td style="text-align: center;">{{ estimate.estimateno }}</td>
                                         <td style="text-align: center;"> {{ estimate.reference_number }}</td>
                                         <td style="text-align: center;">{{ estimate.customer }}</td>
-                                        <!-- <td style="text-align: center;"></td> -->
+                                        <td style="text-align: center;"> {{ estimate.status }}</td>
                                         <td style="text-align: center;">{{ estimate.estimatetotal }}</td>
-                                        <td style="text-align: center;">
+                                        <!-- <td style="text-align: center;">
                                             <div class="dropdown">
                                                 <button type="button" class="btn btn-outline-info dropdown-toggle text-grey"
                                                         data-toggle="dropdown">Actions
@@ -150,13 +157,20 @@ body{
                                                     <a href="editestimate/{{ estimate.estimateid }}" class="dropdown-item"
                                                        style="color:black; font-size: 15px;"><i
                                                             class="bx bx-edit"><b>EDIT</b></i></a>
-                                                    <a href="deleteestimate/{{ estimate.estimateid }}" class="dropdown-item"
-                                                       style="color:black; font-size: 15px;"><i
-                                                            class="bx bx-trash"><b>DELETE</b></i>
+                                                    <form  action=" deleteestimate/{{ estimate.estimateid }}"   >  
+                                                        <input name="_method" type="hidden" value="DELETE">
+                                                    <a  class="dropdown-item delete"
+                                                       style="color:black; font-size: 15px;cursor: pointer;" >
+                                                       
+                                                       <i class="bx bx-trash"><b>
+                                                                DELETE
+                                                            </b></i>
+                                                            
                                                             <input name="_method" type="hidden" value="DELETE"></a>
+                                                        </form> 
                                                 </div>
                                             </div>
-                                        </td>
+                                        </td> -->
                                     </tr>
                                 {% endif %}
                             {% endfor %}
@@ -195,6 +209,48 @@ body{
         </script>
 
 
+
+
+    <script>
+        $(document).ready(function($) {
+            $(".table-row").dblclick(function() {
+                window.document.location = $(this).data("href");
+            });
+        });
+    </script>
+
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <script>
+
+$('.delete').click(function(event) {
+    var form =  $(this).closest("form");
+    var name = $(this).data("name");
+    event.preventDefault();
+    swal({
+        title: `Are you sure you want to delete this record?`,
+        text: "If you delete this, it will be gone forever.",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+    .then((willDelete) => {
+        if (willDelete) {
+            swal("Poof! Your imaginary file has been deleted!", {
+            icon: "success" ,
+      
+            });
+            form.submit();
+
+            
+            
+            
+            }
+    });
+});
+
+    </script>
 
         
         

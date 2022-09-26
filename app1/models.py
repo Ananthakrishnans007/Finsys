@@ -681,6 +681,17 @@ class estimate(models.Model):
     SGST =  models.CharField(max_length=100)
     TCS =  models.CharField(max_length=100)
 
+    estimate_status = (
+        ('Draft','Draft'),
+        ('Approved','Approved'),
+        ('Invoice','Invoice'),
+
+    )
+    
+    status =models.CharField(max_length=150,choices=estimate_status,default='Draft')
+
+
+
     def __str__(self):
         return self.customer
 
