@@ -43,39 +43,27 @@
                     var tax = $(this).find('.tax').val();
 
                     
-                   
-                    if (tax ==1)
+                    var xyz = document.getElementById("tax").value
+
+                    if(xyz ==1 || xyz ==2  )
                         tax=28
-                    if (tax ==2)
-                        tax=28 
-                    if (tax ==3)
-                        tax=18      
-                    if (tax ==4)
-                        tax=18
-                    if (tax ==5)
-                        tax=12 
-                    if (tax ==6)
+                    if(xyz ==3 || xyz ==4  )
+                        tax=18    
+                    if(xyz ==5 || xyz ==6  )
                         tax=12
-                    if (tax ==7)
+                    if(xyz ==7 || xyz ==8  )
                         tax=6 
-                    if (tax ==8)
-                        tax=6
-                    if (tax ==9)
+                    if(xyz ==9 || xyz ==10  )
                         tax=5
-                    if (tax ==10)
-                        tax=5 
-                    if (tax ==11)
-                        tax=3
-                    if (tax ==12)
-                        tax=3
-                    if (tax ==13)
-                        tax=.25
-                    if (tax ==14)
-                        tax=.25
-                    if (tax ==0)
-                        tax=0       
-                    
-                        
+                    if(xyz ==11 || xyz ==12  )
+                        tax=3 
+                    if(xyz ==13 || xyz ==14  )
+                        tax=.25 
+                    if(xyz ==15 )
+                        tax=.25     
+
+    
+
 
                     var taxamount = $(this).find('.taxamount').val();
 
@@ -111,21 +99,14 @@
             
             
             $('#sub_total').val(total.toFixed(2));
-            $('#tax_amount').val(taxamount.toFixed(2));
-            
-            $('#CGST_tax_amount').val((taxamount/2).toFixed(2));
-            $('#SGST_tax_amount').val((taxamount/2).toFixed(2));
 
+            
             $('#tcs_amount').val(tcsamount.toFixed(2));
 
 
             tax_sum = total / 100 * $('#tax').val();
             
-            
-
-
-
-
+  
             calc_tcs();
         }
 
@@ -135,13 +116,18 @@
 
             tcs=0
             tcs =a/100 * total
+
+           
+
+           
             
             $('#tcs_amount').val(((a/100) *total).toFixed(2));
 
             $('#total_amount').val((taxamount + total + tcs).toFixed(2));
             
-            
+            test()
         }
+        
 
         function calc_roundoff(){
 
@@ -154,11 +140,32 @@
 
 
 }
+        function test(){
+
+            var bc = document.getElementById("tax").value
+            
+            d=0
+            if (bc ==1 || bc ==3 || bc ==5 || bc ==7 || bc ==9 || bc ==11 || bc ==13|| bc ==15 ) {
+                $('#CGST_tax_amount').val((taxamount/2).toFixed(2));
+                $('#SGST_tax_amount').val((taxamount/2).toFixed(2));
+                $('#tax_amount').val(d.toFixed(2)); 
+
+                }
+            if (bc ==2 || bc ==4 || bc ==6 || bc ==8 || bc ==10|| bc ==12 || bc ==14 ){
+                $('#tax_amount').val(taxamount.toFixed(2)); 
+                $('#CGST_tax_amount').val(d.toFixed(2));
+                $('#SGST_tax_amount').val(d.toFixed(2));
+            }
+            
+            
+
+        }
 
 
 
 
     </script>
+
 
     <style>
         input {
@@ -168,7 +175,7 @@
             color: white;
         }
     </style>
-    <form action="{% url 'updateestimate2' estimate.estimateid %} " method="post" class="needs-validation" novalidate>
+    <form action="{% url 'updateestimate2' estimate.estimateid %} " method="post" class="needs-validation" enctype="multipart/form-data" novalidate>
         {% csrf_token %}
         <div class="page-content">
             <div class="card radius-15">
@@ -570,7 +577,7 @@
                         <div class="col-md-6">
 
                             <textarea class="form-control"  id="" name="Note" placeholder="Note" style="height: 190px;"value="{{ estimate.total3 }}">{{ estimate.note }}</textarea>
-
+                            <input type="file" name="file"  style="margin-top: 10px; width: 70%;">
 
                         </div>
 

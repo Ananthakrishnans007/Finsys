@@ -1,7 +1,9 @@
+from curses.ascii import HT
+from http.client import HTTPResponse
 from multiprocessing import context
 from django.conf import settings
 from django.core.mail import send_mail
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,HttpResponse
 from datetime import datetime, date, timedelta
 from .models import advancepayment, paydowncreditcard, salesrecpts, timeact, timeactsale, Cheqs, suplrcredit, addac, \
     bills, invoice, expences, payment, credit, delayedcharge, estimate, service, noninventory, bundle, employee, \
@@ -16,6 +18,7 @@ from django.http.response import JsonResponse
 from django.contrib.auth.decorators import login_required
 import itertools
 import requests
+from .pdf import html2pdf
 
 def index(request):
     return render(request, 'app1/index.html')
@@ -25641,6 +25644,7 @@ def estcreate2(request):
                         CGST  = request.POST['CGST'],
                         SGST = request.POST['SGST'],
                         TCS = request.POST['TCS'],
+                        file = request.POST['file'],
                         
                         )
         est2.save()
@@ -25752,6 +25756,7 @@ def updateestimate2(request, id):
         upd.CGST  = request.POST['CGST'],
         upd.SGST = request.POST['SGST'],
         upd.TCS = request.POST['TCS'],
+        file = request.POST['file'],
 
         upd.save()
         return redirect('goestimate')
@@ -25816,3 +25821,32 @@ def estimate_view(request,id):
 
 
     return render(request,'app1/estimate_view.html',context)
+
+
+def convert1(request,id):
+    cmp1 = company.objects.get(id=request.session['uid'])
+    upd = estimate.objects.get(estimateid=id, cid=cmp1)
+
+    upd.status = 'Approved'
+    upd.save()
+
+
+
+    return redirect(estimate_view,id)
+
+def convert2(request,id):
+    cmp1 = company.objects.get(id=request.session['uid'])
+    upd = estimate.objects.get(estimateid=id, cid=cmp1)
+
+    upd.status = 'Invoice'
+    upd.save()
+
+
+
+    return redirect(estimate_view,id)
+
+    
+def pdf(request):
+    pdf =html2pdf("app1/pdf.html")
+    return HttpResponse(pdf,content_type="application/pdf")
+    

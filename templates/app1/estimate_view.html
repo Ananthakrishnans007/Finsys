@@ -6,7 +6,9 @@
     {% if user.is_authenticated %}
 
     <link rel="stylesheet" type="text/css" href="{% static 'assets/css/estimate.css' %}">
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.debug.js" ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js" ></script>
+   
     <style>
 
         #div1{
@@ -37,29 +39,102 @@
 
     </style>
 
+<script>
+
+
+    async function generatePDF() {
+        // document.getElementById("downloadButton").innerHTML = "Currently downloading, please wait";
+
+        //Downloading
+        var downloading = document.getElementById("whatToPrint");
+        var doc = new jsPDF('l', 'pt');
+
+        await html2canvas(downloading, {
+            //allowTaint: true,
+            //useCORS: true,
+            // width: 600
+            
+        }).then((canvas) => {
+            //Canvas (convert to PNG)
+            doc.addImage(canvas.toDataURL("image/png"), 'PNG', 15, 10, 700, 850);
+        })
+
+        doc.save("Document.pdf");
+
+        //End of downloading
+
+        // document.getElementById("downloadButton").innerHTML = "Click to download";
+    }
+
+    
+</script>
+
+
+	
+	
     
 
     
 
-    <div class="page-content">
+    <div class="page-content" >
 
         <div class="card radius-15">
             <div class="card-body">
                 <div class="card-title">
-                    <center><h2 class="mb-0">ESTIMATE VIEW</h2></center>
+                    <center><h2 class="mb-0">ESTIMATE VIEW</h2> <h4>{{estimate.status}}</h4></center>
                     <hr>
                 </div>
+                <div class="btn-group" style="float: right; ">
+
+                   
+                <a href="{% url 'editestimate' estimate.estimateid %}" class=" fa fa-pencil" style="padding: 10px; cursor: pointer;"> Edit</a>
+
+                
+                <a   style="padding: 10px; margin-top: -5px; cursor: pointer;" > 
+
+                 <form  action="{% url 'deleteestimate' estimate.estimateid %}"   > 
+                    <i class="fa fa-trash-o delete"> Delete</i>
+                    <input name="_method" type="hidden" value="DELETE">
+                    
+                    </form> </a>
+                
+                    <div class="dropdown  " style="padding: 10px; cursor: pointer; margin-top: -10px;">
+                        <li  class=" dropdown-toggle fa fa-share-alt "data-toggle="dropdown"> &nbsp;Share
+                    </li>
+                        <ul class="dropdown-menu" style="background-color: black;">
+                            <a class="dropdown-item fa fa-facebook" href=""> &nbsp; facebook</a>
+                            <a class="dropdown-item fa fa-whatsapp" href=""> &nbsp;Whatsapp</a>
+                            <a class="dropdown-item fa fa-envelope-o" href=""> &nbsp;Email</a>
+                            
+                        </ul>
+                </div>
+                    
+                
+                <a class="fa fa-print" style="padding: 10px; cursor: pointer;"  href="javascript:generatePDF()" id="downloadButton" > PDF/Print</a>
+
+                  <div class="dropdown  " style="padding: 10px; cursor: pointer; margin-top: -14px;">
+                    <li  class=" dropdown-toggle  "data-toggle="dropdown"> &nbsp;Convert
+                </li>
+                    <ul class="dropdown-menu" style="background-color: black;">
+                        <a class="dropdown-item " href="{% url 'convert1' estimate.estimateid %}"> &nbsp;Approved </a>
+                        <a class="dropdown-item " href="{% url 'convert2' estimate.estimateid %}"> &nbsp;Invoced</a>
+                        
+                        
+                    </ul>
+            </div>
+
+            </div>    
             </div>
         </div>
         
 
         
-        
-                <div class="my-5 page" size="A4">
+        <div  id="whatToPrint">
+                <div class="my-5 page" size="A4" >
                     <div class="p-5">
                         <section class="top-content bb d-flex justify-content-between">
                             <div class="logo">
-                                <img src="logo.png" alt="" class="img-fluid">
+                                <!-- <img src="logo.png" alt="" class="img-fluid"> -->
                             </div>
                             <div class="top-left">
                                 <div class="graphic-path">
@@ -88,7 +163,7 @@
                                     <div class="col-5">
                                         <p>TO,</p>
                                         <h5>{{estimate.customer}}</h5>
-                                        <p class="address col-7" > {{ estimate.billingaddress}} </p>
+                                        <p class="address col-6" style="margin-left: -14px;" > {{ estimate.billingaddress}} </p>
                                         
                                     </div>
                                 </div>
@@ -204,23 +279,30 @@
                                             <td style="color:black">Sub Total :</td>
                                             <td style="color:black">{{estimate.subtotal}}</td>
                                         </tr>
+                                        {% if estimate.IGST != "0.00" %}
                                         <tr>
                                             <td style="color:black">IGST :</td>
                                             <td style="color:black">{{estimate.IGST}}</td>
                                         </tr>
+                                        {% endif %}
+                                        {% if estimate.CGST != "0.00" %}
                                         <tr>
                                             <td style="color:black">CGST :</td>
                                             <td style="color:black">{{estimate.CGST}}</td>
                                         </tr>
+                                        {% endif %}
+                                        {% if estimate.SGST != "0.00" %}
                                         <tr>
                                             <td style="color:black">SGST:</td>
                                             <td style="color:black">{{estimate.SGST}}</td>
                                         </tr>
+                                        {% endif %}
+                                        {% if estimate.TCS != "0.00" %}
                                         <tr>
                                             <td style="color:black">TCS:</td>
                                             <td style="color:black">{{estimate.TCS}}</td>
                                         </tr>
-                                        
+                                        {% endif %}
                                         <tfoot>
                                             <tr>
                                                 <td style="color:black">Estimate Total:</td>
@@ -272,13 +354,43 @@
                     </div>
                 </div>
 
-               
+            </div>
             
         
             </div>
 
 
+            <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+            <script>
         
+        $('.delete').click(function(event) {
+            var form =  $(this).closest("form");
+            var name = $(this).data("name");
+            event.preventDefault();
+            swal({
+                title: `Are you sure you want to delete this record?`,
+                text: "If you delete this, it will be gone forever.",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    swal("Poof! Your imaginary file has been deleted!", {
+                    icon: "success" ,
+              
+                    });
+                    form.submit();
+        
+                    
+                    
+                    
+                    }
+            });
+        });
+        
+            </script> 
 
 
 

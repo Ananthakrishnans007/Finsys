@@ -372,6 +372,19 @@ urlpatterns = [
 
     path('estimate_view/<int:id>',views.estimate_view,name='estimate_view'),
 
+    path('convert1/<int:id>',views.convert1,name='convert1'),
+
+    path('convert2/<int:id>',views.convert2,name='convert2'),
+
+
+    path('pdf',views.pdf,name='pdf'),
+
+
+    
+
+
+    
+
     
 
 

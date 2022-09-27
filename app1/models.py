@@ -680,6 +680,7 @@ class estimate(models.Model):
     CGST  =  models.CharField(max_length=100)
     SGST =  models.CharField(max_length=100)
     TCS =  models.CharField(max_length=100)
+    file = models.FileField(upload_to='estimate')
 
     estimate_status = (
         ('Draft','Draft'),
