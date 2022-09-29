@@ -643,6 +643,7 @@ class estimate(models.Model):
     expirationdate = models.DateField()
     estimateno = models.CharField(max_length=100)
     placeofsupply = models.CharField(max_length=100)
+
     product = models.CharField(max_length=100)
     hsn = models.CharField(max_length=100)
     description = models.CharField(max_length=100)
@@ -1105,3 +1106,63 @@ class customize(models.Model):
     fonts = models.CharField(max_length=255, default='', blank=True)
     lastedited = models.CharField(default=timezone.now, max_length=255, blank=True)
     selected = models.CharField(max_length=255, default='', blank=True)
+
+
+class salesorder(models.Model):
+
+    cid = models.ForeignKey(company, on_delete=models.CASCADE)
+    
+    salename = models.CharField(max_length=100)
+    saleemail = models.EmailField()
+    saleaddress = models.CharField(max_length=150)
+    saledate = models.CharField(max_length=10)
+    shipmentdate =  models.CharField(max_length=10)
+    saleno = models.CharField(max_length=20)
+    placeofsupply = models.CharField(max_length=100)
+
+
+    product = models.CharField(max_length=100)
+    hsn = models.CharField(max_length=100)
+    description = models.CharField(max_length=100)
+    qty = models.CharField(max_length=100)
+    rate = models.CharField(max_length=100)
+    total = models.CharField(max_length=100)
+    tax = models.CharField(max_length=100, default='0')
+
+    
+    product1 = models.CharField(max_length=100, default='')
+    hsn1 = models.CharField(max_length=100, default='')
+    description1 = models.CharField(max_length=100, default='')
+    qty1 = models.CharField(max_length=100, default='')
+    rate1 = models.CharField(max_length=100, default='')
+    total1 = models.CharField(max_length=100, default='')
+    tax1 = models.CharField(max_length=100, default='0')
+
+    product2 = models.CharField(max_length=100, default='')
+    hsn2 = models.CharField(max_length=100, default='')
+    description2 = models.CharField(max_length=100, default='')
+    qty2 = models.CharField(max_length=100, default='')
+    rate2 = models.CharField(max_length=100, default='')
+    total2 = models.CharField(max_length=100, default='')
+    tax2 = models.CharField(max_length=100, default='0')
+
+    product3 = models.CharField(max_length=100, default='')
+    hsn3 = models.CharField(max_length=100, default='')
+    description3 = models.CharField(max_length=100, default='')
+    qty3 = models.CharField(max_length=100, default='')
+    rate3 = models.CharField(max_length=100, default='')
+    total3 = models.CharField(max_length=100, default='')
+    tax3 = models.CharField(max_length=100, default='0')
+    taxamount = models.CharField(max_length=100, default='')
+
+    reference_number = models.CharField(max_length=100, default='')
+    note = models.TextField()
+
+    subtotal = models.CharField(max_length=100)
+    IGST = models.CharField(max_length=100)
+    CGST  =  models.CharField(max_length=100)
+    SGST =  models.CharField(max_length=100)
+    TCS =  models.CharField(max_length=100)
+    salestotal = models.CharField(max_length=100)
+    
+    file = models.FileField(upload_to='estimate')

@@ -1,6 +1,7 @@
 from curses.ascii import HT
 from http.client import HTTPResponse
 from multiprocessing import context
+import os
 from django.conf import settings
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect,HttpResponse
@@ -19,6 +20,8 @@ from django.contrib.auth.decorators import login_required
 import itertools
 import requests
 from .pdf import html2pdf
+
+from . models import *
 
 def index(request):
     return render(request, 'app1/index.html')
@@ -25644,9 +25647,13 @@ def estcreate2(request):
                         CGST  = request.POST['CGST'],
                         SGST = request.POST['SGST'],
                         TCS = request.POST['TCS'],
-                        file = request.POST['file'],
+                        
                         
                         )
+                        
+                            
+        if len(request.FILES) != 0:
+            est2.file=request.FILES['file']                    
         est2.save()
         est2.estimateno = int(est2.estimateno) + est2.estimateid
         est2.save()
@@ -25756,7 +25763,14 @@ def updateestimate2(request, id):
         upd.CGST  = request.POST['CGST'],
         upd.SGST = request.POST['SGST'],
         upd.TCS = request.POST['TCS'],
-        file = request.POST['file'],
+
+        if len(request.FILES) != 0:
+            if len(upd.file) > 0  :
+                os.remove(upd.estimate.path)
+                
+            upd.file = request.FILES['file'],
+
+        
 
         upd.save()
         return redirect('goestimate')
@@ -25845,8 +25859,113 @@ def convert2(request,id):
 
     return redirect(estimate_view,id)
 
+
+def estmate_filter1(request):
+    cmp1 = company.objects.get(id=request.session["uid"])
+    est1 = estimate.objects.filter(cid=cmp1,status='Draft').all()
+
+    context = {
+            'est1' :est1,
+            'cmp1': cmp1
+            }
+    return render(request,'app1/goestimate.html',context)
+def estmate_filter2(request):
+    cmp1 = company.objects.get(id=request.session["uid"])
+    est1 = estimate.objects.filter(cid=cmp1,status='Approved').all()
+
+    context = {
+            'est1' :est1,
+            'cmp1': cmp1
+            }
+    return render(request,'app1/goestimate.html',context)
+
+def estmate_filter3(request):
+    cmp1 = company.objects.get(id=request.session["uid"])
+    est1 = estimate.objects.filter(cid=cmp1,status='Invoice').all()
+
+    context = {
+            'est1' :est1,
+            'cmp1': cmp1
+            }
+    return render(request,'app1/goestimate.html',context)
+
+
+
+# def pdf(request):
+#     pdf =html2pdf("app1/pdf.html")
+#     return HttpResponse(pdf,content_type="application/pdf")
+
+
+def gosalesorder(request):
+
+    return render(request,'app1/gosalesorder.html')
+
+def newsalesorder(request):
+    cmp1 = company.objects.get(id=request.session["uid"])
+    toda = date.today()
+    tod = toda.strftime("%Y-%m-%d")
+    customers = customer.objects.filter(cid=cmp1).all()
+    sel1 = salesorder.objects.filter(cid=cmp1).all()
+    inv = inventory.objects.filter(cid=cmp1).all()
+    bun = bundle.objects.filter(cid=cmp1).all()
+    noninv = noninventory.objects.filter(cid=cmp1).all()
+    ser = service.objects.filter(cid=cmp1).all()
+    context = {'sel1': sel1, 'customers': customers, 'cmp1': cmp1, 'inv': inv, 'bun': bun, 'noninv': noninv,
+                   'ser': ser, 'tod': tod}
+        
     
-def pdf(request):
-    pdf =html2pdf("app1/pdf.html")
-    return HttpResponse(pdf,content_type="application/pdf")
+
+    return render(request,'app1/salesorder.html',context )
+
+
+@login_required(login_url='regcomp')
+def createsales_record(request):
+    if request.method == 'POST':
+        cmp1 = company.objects.get(id=request.session["uid"])
+        sel2 = salesorder(salename=request.POST['customer'], saleemail=request.POST['email'],
+                         saleaddress=request.POST['billingaddress'], saledate=request.POST['Salesdate'],
+                          shipmentdate=request.POST['Shipmentdate'], placeofsupply=request.POST['placeofsupply'],
+                        saleno='1000', product=request.POST['product'], description=request.POST['description'],
+                        hsn=request.POST['hsn'],
+                        qty=request.POST['qty'], rate=request.POST['rate'],
+
+                        
+                        
+                        tax=request.POST['tax'],
+
+
+                        total=request.POST['total'], taxamount=request.POST['taxamount'],
+                        subtotal=request.POST['sub_total'], salestotal=request.POST['total_amount'], product1=request.POST[
+                            'product1'], hsn1=request.POST['hsn1'], qty1=request.POST['qty1'],
+                        description1=request.POST['description1'], rate1=request.POST[
+                            'rate1'], total1=request.POST['total1'], tax1=request.POST['tax1'],
+                        product2=request.POST['product2'], hsn2=request.POST['hsn2'], qty2=request.POST['qty2'],
+                        description2=request.POST['description2'], rate2=request.POST[
+                            'rate2'], total2=request.POST['total2'], tax2=request.POST['tax2'],
+                        product3=request.POST['product3'], hsn3=request.POST['hsn3'], qty3=request.POST['qty3'],
+                        description3=request.POST['description3'], rate3=request.POST[
+                            'rate3'], total3=request.POST['total3'], tax3=request.POST['tax3'],
+                        cid=cmp1,
+                        reference_number = request.POST['Ref_No'],
+                        note = request.POST['Note'],
+
+                        IGST =request.POST['IGST'],
+                        CGST  = request.POST['CGST'],
+                        SGST = request.POST['SGST'],
+                        TCS = request.POST['TCS'],
+                        
+                        
+                        )
+                        
+                            
+        if len(request.FILES) != 0:
+            est2.file=request.FILES['file']                    
+        est2.save()
+        est2.estimateno = int(est2.estimateno) + est2.estimateid
+        est2.save()
+        return redirect('gosalesorder')
     
+    return redirect('gosalesorder')
+
+
+

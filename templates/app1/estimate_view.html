@@ -1,6 +1,6 @@
 {% extends 'app1/base.html' %}
 {% block body %}
-
+{% load social_share %}
 
     {% load static %}
     {% if user.is_authenticated %}
@@ -36,6 +36,20 @@
             
             
         }
+        .ribbon .ribbon-inner {
+    text-align: center;
+    color: #fff;
+    top: -20px;
+    left: -90px;
+    width: 120px;
+    padding: 3px;
+    /* position: relative;
+    transform: rotate(-45deg); */
+}
+.ribbon .ribbon-open {
+    background-color: #268ddd;
+    border-color: #1c72b4;
+}
 
     </style>
 
@@ -81,7 +95,7 @@
         <div class="card radius-15">
             <div class="card-body">
                 <div class="card-title">
-                    <center><h2 class="mb-0">ESTIMATE VIEW</h2> <h4>{{estimate.status}}</h4></center>
+                    <center><h2 class="mb-0">ESTIMATE VIEW</h2> <h4></h4></center>
                     <hr>
                 </div>
                 <div class="btn-group" style="float: right; ">
@@ -102,11 +116,20 @@
                         <li  class=" dropdown-toggle fa fa-share-alt "data-toggle="dropdown"> &nbsp;Share
                     </li>
                         <ul class="dropdown-menu" style="background-color: black;">
-                            <a class="dropdown-item fa fa-facebook" href=""> &nbsp; facebook</a>
+                            <!-- <a class="dropdown-item fa fa-facebook" target="_blank" 
+                           > &nbsp;</a>{% post_to_facebook object_or_url "<p style='color: green;'>facebook</p>" %}
+                           
                             <a class="dropdown-item fa fa-whatsapp" href=""> &nbsp;Whatsapp</a>
-                            <a class="dropdown-item fa fa-envelope-o" href=""> &nbsp;Email</a>
+                            <a class="dropdown-item fa fa-envelope-o" href=""> &nbsp;Email</a> -->
+
+                            <li style="margin-left: 50px;"  ></i>{% post_to_facebook object_or_url "Facebook!" %}</li>
+                            <li style="margin-left: 50px;" > {% post_to_whatsapp object_or_url "WhatsApp" %}</li>
+                            <li style="margin-left: 50px;" >{% send_email object.title "New Song: {{object.title}}. Check it out!" object_or_url "Email" %}</li>
                             
+                           
+                          
                         </ul>
+                        
                 </div>
                     
                 
@@ -130,8 +153,11 @@
 
         
         <div  id="whatToPrint">
+            
                 <div class="my-5 page" size="A4" >
                     <div class="p-5">
+                        <div id="ember2512" class="tooltip-container ember-view ribbon text-ellipsis">
+                            <div class="ribbon-inner ribbon-open">{{estimate.status}}<!----></div></div>
                         <section class="top-content bb d-flex justify-content-between">
                             <div class="logo">
                                 <!-- <img src="logo.png" alt="" class="img-fluid"> -->
@@ -156,7 +182,6 @@
                                             {{cmp1.city}},
                                             {{cmp1.state}}<br>
                                             {{cmp1.pincode}}<br>
-                                        
                                         </p>
                                         
                                     </div>

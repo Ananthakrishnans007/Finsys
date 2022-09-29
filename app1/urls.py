@@ -376,8 +376,29 @@ urlpatterns = [
 
     path('convert2/<int:id>',views.convert2,name='convert2'),
 
+    path('estmate_filter1',views.estmate_filter1,name='estmate_filter1'),
 
-    path('pdf',views.pdf,name='pdf'),
+    path('estmate_filter2',views.estmate_filter2,name='estmate_filter2'),
+
+    path('estmate_filter3',views.estmate_filter3,name='estmate_filter3'),
+
+
+    # Sales
+
+    path('gosalesorder',views.gosalesorder,name='gosalesorder'),
+
+    path('newsalesorder',views.newsalesorder,name='newsalesorder'),
+
+    path('createsales_record',views.createsales_record,name='createsales_record'),
+
+    
+
+
+
+    
+
+
+    # path('pdf',views.pdf,name='pdf'),
 
 
     
