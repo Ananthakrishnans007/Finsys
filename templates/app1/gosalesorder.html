@@ -82,7 +82,7 @@ body{
                         
                         <div class="col-md-4">
                             <div class="wrap" style="width: 60%; margin-top: 8px;">
-                                <form action="search_estimate" method="POST">{% csrf_token %}
+                                <form action="search_sale" method="POST">{% csrf_token %}
                                 <div class="search">
                                     
                                    <input type="text" class="searchTerm" name="search">
@@ -101,7 +101,7 @@ body{
                                 
                                 <option value="1" selected>All</option>
                                 <option value="2" >Coustomer Name</option>
-                                <option value="3" >Estimate No</option>
+                                <option value="3" >Sales Order No</option>
                                 
                                 
                                 
@@ -119,13 +119,13 @@ body{
                                             data-toggle="dropdown">filter by
                                     </button>
                                     <div class="dropdown-menu" style="background-color: black;">
-                                        <a class="dropdown-item" href="{% url 'goestimate' %}"
+                                        <a class="dropdown-item" href="{% url 'gosalesorder' %}"
                                            style="height: 40px; font-size: 15px; color: white; text-align: center;" >All</a>
-                                        <a class="dropdown-item" href="{% url 'estmate_filter1' %}"
+                                        <a class="dropdown-item" href="{% url 'sale_filter1' %}"
                                            style="height: 40px; font-size: 15px; color: white; text-align: center;" >Draft</a>
-                                        <a class="dropdown-item" href="{% url 'estmate_filter2' %}"
+                                        <a class="dropdown-item" href="{% url 'sale_filter2' %}"
                                            style="height: 40px; font-size: 15px; color: white; text-align: center;">Approved</a>
-                                        <a class="dropdown-item" href="{% url 'estmate_filter3' %}"
+                                        <a class="dropdown-item" href="{% url 'sale_filter3' %}"
                                            style="height: 40px; font-size: 15px; color: white; text-align: center;">Invoice</a>
                                         
                                 </div> 
@@ -149,7 +149,7 @@ body{
                             <thead>
                             <tr>
                                 <th style="text-align: center;">Date</th>
-                                <th style="text-align: center;">Estimate No</th>
+                                <th style="text-align: center;">Sales Order No</th>
                                 <th style="text-align: center;">Reference Number</th>
                                 <th style="text-align: center;">Coustomer Name</th>
                                 <th style="text-align: center;">Status</th>
@@ -158,15 +158,15 @@ body{
                             </tr>
                             </thead>
                             <tbody>
-                                {% for estimate in est1 %}
-                                {% if estimate.cid_id == cmp1.cid %}
-                                    <tr tr class="table-row " data-href="{% url 'estimate_view' estimate.estimateid %}" >
-                                        <th style="text-align: center;">{{ estimate.estimatedate | date:'d-m-Y' }}</th>
-                                        <td style="text-align: center;">{{ estimate.estimateno }}</td>
-                                        <td style="text-align: center;"> {{ estimate.reference_number }}</td>
-                                        <td style="text-align: center;">{{ estimate.customer }}</td>
-                                        <td style="text-align: center;"> {{ estimate.status }}</td>
-                                        <td style="text-align: center;">{{ estimate.estimatetotal }}</td>
+                                {% for sale in sel1 %}
+                                {% if sale.cid_id == cmp1.cid %}
+                                    <tr tr class="table-row " data-href="{% url 'sales_order_view' sale.id %}" >
+                                        <th style="text-align: center;">{{ sale.saledate | date:'d-m-Y' }}</th>
+                                        <td style="text-align: center;">{{ sale.shipmentdate }}</td>
+                                        <td style="text-align: center;"> {{ sale.reference_number }}</td>
+                                        <td style="text-align: center;">{{ sale.salename }}</td>
+                                        <td style="text-align: center;"> {{ sale.status }}</td>
+                                        <td style="text-align: center;">{{ sale.salestotal }}</td>
                                         <!-- <td style="text-align: center;">
                                             <div class="dropdown">
                                                 <button type="button" class="btn btn-outline-info dropdown-toggle text-grey"

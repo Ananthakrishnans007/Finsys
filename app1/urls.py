@@ -391,11 +391,38 @@ urlpatterns = [
 
     path('createsales_record',views.createsales_record,name='createsales_record'),
 
+    path('new_customers2',views.new_customers2,name='new_customers2'),
+
+    path('sales_order_view/<int:id>',views.sales_order_view,name='sales_order_view'),
+
+    path('sales_order_delete/<int:id>',views.sales_order_delete,name='sales_order_delete'),
+
+    path('edit_sales_order/<int:id>',views.edit_sales_order,name='edit_sales_order'),
+
+    path('updatesale/<int:id>',views.updatesale,name='updatesale'),
+
+    path('sale_convert1/<int:id>',views.sale_convert1,name='sale_convert1'),
+
+    path('sale_convert2/<int:id>',views.sale_convert2,name='sale_convert2'),
+
+    path('sale_filter1',views.sale_filter1,name='sale_filter1'),
+
+    path('sale_filter2',views.sale_filter2,name='sale_filter2'),
+
+    path('sale_filter3',views.sale_filter3,name='sale_filter3'),
+
+    path('search_sale',views.search_sale,name='search_sale'),
+
     
 
 
+    
 
     
+
+    
+
+
 
 
     # path('pdf',views.pdf,name='pdf'),

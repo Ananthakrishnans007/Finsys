@@ -653,6 +653,7 @@ class estimate(models.Model):
     tax = models.CharField(max_length=100, default='0')
     subtotal = models.CharField(max_length=100)
     estimatetotal = models.CharField(max_length=100)
+
     product1 = models.CharField(max_length=100, default='')
     hsn1 = models.CharField(max_length=100, default='')
     description1 = models.CharField(max_length=100, default='')
@@ -660,6 +661,7 @@ class estimate(models.Model):
     rate1 = models.CharField(max_length=100, default='')
     total1 = models.CharField(max_length=100, default='')
     tax1 = models.CharField(max_length=100, default='0')
+
     product2 = models.CharField(max_length=100, default='')
     hsn2 = models.CharField(max_length=100, default='')
     description2 = models.CharField(max_length=100, default='')
@@ -667,6 +669,7 @@ class estimate(models.Model):
     rate2 = models.CharField(max_length=100, default='')
     total2 = models.CharField(max_length=100, default='')
     tax2 = models.CharField(max_length=100, default='0')
+
     product3 = models.CharField(max_length=100, default='')
     hsn3 = models.CharField(max_length=100, default='')
     description3 = models.CharField(max_length=100, default='')
@@ -674,6 +677,7 @@ class estimate(models.Model):
     rate3 = models.CharField(max_length=100, default='')
     total3 = models.CharField(max_length=100, default='')
     tax3 = models.CharField(max_length=100, default='0')
+
     taxamount = models.CharField(max_length=100, default='')
     reference_number = models.CharField(max_length=100, default='')
     note = models.TextField()
@@ -1115,8 +1119,8 @@ class salesorder(models.Model):
     salename = models.CharField(max_length=100)
     saleemail = models.EmailField()
     saleaddress = models.CharField(max_length=150)
-    saledate = models.CharField(max_length=10)
-    shipmentdate =  models.CharField(max_length=10)
+    saledate = models.DateField()
+    shipmentdate =  models.DateField()
     saleno = models.CharField(max_length=20)
     placeofsupply = models.CharField(max_length=100)
 
@@ -1165,4 +1169,15 @@ class salesorder(models.Model):
     TCS =  models.CharField(max_length=100)
     salestotal = models.CharField(max_length=100)
     
-    file = models.FileField(upload_to='estimate')
+    file = models.FileField(upload_to='sales')
+
+    sale_status = (
+        ('Draft','Draft'),
+        ('Approved','Approved'),
+        ('Sales Order','Sales Order'),
+
+    )
+    
+    status =models.CharField(max_length=150,choices=sale_status,default='Draft')
+
+

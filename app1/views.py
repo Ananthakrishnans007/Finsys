@@ -25783,7 +25783,9 @@ def deleteestimate(request, id):
     try:
         cmp1 = company.objects.get(id=request.session['uid'])
         upd = estimate.objects.get(estimateid=id, cid=cmp1)
+        
         upd.delete()
+        os.remove(upd.estimate.path)
         return redirect('goestimate')
     except:
         return redirect('goestimate')
@@ -25850,11 +25852,72 @@ def convert1(request,id):
 
 def convert2(request,id):
     cmp1 = company.objects.get(id=request.session['uid'])
-    upd = estimate.objects.get(estimateid=id, cid=cmp1)
+    est= estimate.objects.get(estimateid=id, cid=cmp1)
 
-    upd.status = 'Invoice'
+    est.status = 'Sales'
+    est.save()
+
+
+    cmp1 = company.objects.get(id=request.session['uid'])
+    upd = salesorder()
+    upd.cid =  cmp1 
+    upd.salename  = est.customer
+    upd.saleemail = est.email
+    upd.saleaddress = est.billingaddress
+    upd.saledate = est.estimatedate
+    upd.shipmentdate = est.expirationdate
+    upd.placeofsupply= est.placeofsupply
+
+    upd.product = est.product
+    upd.hsn = est.hsn
+    upd.description =est.description
+    upd.qty = est.qty
+    upd.rate = est.rate
+    upd.tax = est.tax
+    upd.total = est.total
+        
+    upd.product1 = est.product1
+    upd.hsn1 = est.hsn1
+    upd.description1 =est.description1
+    upd.qty1 = est.qty1
+    upd.rate1 =est.rate1
+    upd.total1 = est.total1
+    upd.tax1 =est.tax1
+
+    upd.product2 =est.product2
+    upd.hsn2 = est.hsn2
+    upd.description2 = est.description2
+    upd.qty2 = est.qty2
+    upd.rate2 = est.rate2
+    upd.total2 = est.total2
+    upd.tax2 = est.tax2
+
+    upd.product3 = est.product3
+    upd.hsn3 = est.hsn3
+    upd.description3  = est.description3
+    upd.qty3 = est.qty3
+    upd.rate3 = est.rate3
+    upd.total3 = est.total3
+    upd.tax3 = est.tax3
+    upd.taxamount = est.taxamount
+
+    upd.reference_number = est.reference_number
+    upd.note = est.note
+
+    upd.subtotal=est.subtotal
+    upd.IGST =est. IGST
+    upd.CGST  = est.CGST
+    upd.SGST = est.SGST
+    upd.TCS = est.TCS 
+    upd.salestotal = est.estimatetotal
+  
+    upd.file = est.file
+    upd.saleno = '1000'
+
     upd.save()
-
+    upd.saleno = int(upd.saleno) + upd.id
+    upd.save()
+    
 
 
     return redirect(estimate_view,id)
@@ -25897,8 +25960,16 @@ def estmate_filter3(request):
 
 
 def gosalesorder(request):
+    cmp1 = company.objects.get(id=request.session["uid"])
+    sel1 = salesorder.objects.filter(cid=cmp1).all()
 
-    return render(request,'app1/gosalesorder.html')
+    context = {
+        'sel1' :sel1,
+        'cmp1': cmp1
+
+        }
+
+    return render(request,'app1/gosalesorder.html',context )
 
 def newsalesorder(request):
     cmp1 = company.objects.get(id=request.session["uid"])
@@ -25913,7 +25984,7 @@ def newsalesorder(request):
     context = {'sel1': sel1, 'customers': customers, 'cmp1': cmp1, 'inv': inv, 'bun': bun, 'noninv': noninv,
                    'ser': ser, 'tod': tod}
         
-    
+    print(sel1)
 
     return render(request,'app1/salesorder.html',context )
 
@@ -25922,21 +25993,25 @@ def newsalesorder(request):
 def createsales_record(request):
     if request.method == 'POST':
         cmp1 = company.objects.get(id=request.session["uid"])
-        sel2 = salesorder(salename=request.POST['customer'], saleemail=request.POST['email'],
-                         saleaddress=request.POST['billingaddress'], saledate=request.POST['Salesdate'],
-                          shipmentdate=request.POST['Shipmentdate'], placeofsupply=request.POST['placeofsupply'],
-                        saleno='1000', product=request.POST['product'], description=request.POST['description'],
-                        hsn=request.POST['hsn'],
-                        qty=request.POST['qty'], rate=request.POST['rate'],
 
-                        
-                        
+        sel2 = salesorder(salename=request.POST['customer'], saleemail=request.POST['email'],
+                        saleaddress=request.POST['billingaddress'], saledate=request.POST['Salesdate'],
+                        shipmentdate=request.POST['Shipmentdate'], placeofsupply=request.POST['placeofsupply'],
+                        saleno='1000', 
+                        product=request.POST['product'], 
+                        description=request.POST['description'],
+                        hsn=request.POST['hsn'],
+                        qty=request.POST['qty'],
+                        rate=request.POST['rate'],
                         tax=request.POST['tax'],
 
 
-                        total=request.POST['total'], taxamount=request.POST['taxamount'],
-                        subtotal=request.POST['sub_total'], salestotal=request.POST['total_amount'], product1=request.POST[
-                            'product1'], hsn1=request.POST['hsn1'], qty1=request.POST['qty1'],
+
+                        total=request.POST['total'],
+                        taxamount=request.POST['taxamount'],
+
+                         product1=request.POST['product1'],
+                         hsn1=request.POST['hsn1'], qty1=request.POST['qty1'],
                         description1=request.POST['description1'], rate1=request.POST[
                             'rate1'], total1=request.POST['total1'], tax1=request.POST['tax1'],
                         product2=request.POST['product2'], hsn2=request.POST['hsn2'], qty2=request.POST['qty2'],
@@ -25949,23 +26024,257 @@ def createsales_record(request):
                         reference_number = request.POST['Ref_No'],
                         note = request.POST['Note'],
 
+                        subtotal=request.POST['sub_total'],
                         IGST =request.POST['IGST'],
                         CGST  = request.POST['CGST'],
                         SGST = request.POST['SGST'],
                         TCS = request.POST['TCS'],
-                        
-                        
-                        )
-                        
-                            
+                        salestotal=request.POST['totalamount'],)            
         if len(request.FILES) != 0:
-            est2.file=request.FILES['file']                    
-        est2.save()
-        est2.estimateno = int(est2.estimateno) + est2.estimateid
-        est2.save()
+            sel2.file=request.FILES['file']                    
+        sel2.save()
+        sel2.saleno= int(sel2.saleno) + sel2.id
+        sel2.save()
         return redirect('gosalesorder')
     
     return redirect('gosalesorder')
 
 
 
+@login_required(login_url='regcomp')
+def new_customers2(request):
+    try:
+        cmp1 = company.objects.get(id=request.session["uid"])
+        if request.method == "POST":
+            firstname = request.POST['firstname']
+            lastname = request.POST['lastname']
+            if customer.objects.filter(firstname=firstname, lastname=lastname, cid=cmp1).exists():
+                messages.info(request,
+                              f"Customer {firstname} {lastname} already exists. Please provide a different name.")
+                return redirect('gocustomers')
+            else:
+                customer1 = customer(title=request.POST['title'], firstname=request.POST['firstname'],
+                                     lastname=request.POST['lastname'], company=request.POST['company'],
+                                     location=request.POST['location'], gsttype=request.POST['gsttype'],
+                                     gstin=request.POST['gstin'], panno=request.POST['panno'],
+                                     email=request.POST['email'],
+                                     website=request.POST['website'], mobile=request.POST['mobile'],
+                                     street=request.POST['street'], city=request.POST['city'],
+                                     state=request.POST['state'],
+                                     pincode=request.POST['pincode'], country=request.POST['country'],
+                                     shipstreet=request.POST['shipstreet'], shipcity=request.POST['shipcity'],
+                                     shipstate=request.POST['shipstate'],
+                                     shippincode=request.POST['shippincode'], shipcountry=request.POST['shipcountry'],
+                                     cid=cmp1)
+
+                customer1.save()
+                return redirect('newsalesorder')
+        customers = customer.objects.filter(cid=cmp1).all()
+        context = {'customers': customers, 'cmp1': cmp1}
+        return render(request, 'app1/customers.html', context)
+    except:
+        return redirect('newsalesorder')
+
+
+
+def sales_order_view(request,id):
+    cmp1 = company.objects.get(id=request.session['uid'])
+    upd = salesorder.objects.get(id=id, cid=cmp1)
+
+    context ={
+        'sale':upd,
+        'cmp1':cmp1
+
+    }
+
+
+    return render(request,'app1/sales_order_view.html',context)
+
+
+@login_required(login_url='regcomp')
+def sales_order_delete(request, id):
+    try:
+        cmp1 = company.objects.get(id=request.session['uid'])
+        upd = salesorder.objects.get(id=id, cid=cmp1)
+        
+        upd.delete()
+        os.remove(upd.sales.path)
+        return redirect('gosalesorder')
+    except:
+        return redirect('gosalesorder')
+
+
+@login_required(login_url='regcomp')
+def edit_sales_order(request, id):
+    try:
+        cmp1 = company.objects.get(cid=request.session['uid'])
+        edt = salesorder.objects.get(id=id, cid=cmp1)
+        inv = inventory.objects.filter(cid=cmp1).all()
+        bun = bundle.objects.filter(cid=cmp1).all()
+        noninv = noninventory.objects.filter(cid=cmp1).all()
+        ser = service.objects.filter(cid=cmp1).all()
+        context = {'sale': edt, 'cmp1': cmp1, 'inv': inv,
+                   'noninv': noninv, 'bun': bun, 'ser': ser}
+        return render(request, 'app1/edit_sales_order.html', context)
+    except:
+        return redirect('gosalesorder')
+
+
+@login_required(login_url='regcomp')
+def updatesale(request, id):
+    if request.method =="POST":
+        cmp1 = company.objects.get(id=request.session['uid'])
+        upd = salesorder.objects.get(id=id, cid=cmp1)
+
+        upd.salename  = request.POST['customer']
+        upd.saleemail = request.POST['email']
+        upd.saleaddress = request.POST['billingaddress']
+        upd.saledate = request.POST['Salesdate']
+        upd.shipmentdate = request.POST['Shipmentdate']
+        upd.placeofsupply= request.POST['placeofsupply']
+        upd.product = request.POST['product']
+        upd.hsn = request.POST['hsn']
+        upd.description = request.POST['description']
+        upd.qty = request.POST['qty']
+        upd.rate = request.POST['rate']
+        upd.tax = request.POST['tax']
+        upd.total = request.POST['total']
+        
+        upd.product1 = request.POST['product1']
+        upd.hsn1 = request.POST['hsn1']
+        upd.description1 = request.POST['description1']
+        upd.qty1 = request.POST['qty1']
+        upd.rate1 = request.POST['rate1']
+        upd.total1 = request.POST['total1']
+        upd.tax1 = request.POST['tax1']
+
+        upd.product2 = request.POST['product2']
+        upd.hsn2 = request.POST['hsn2']
+        upd.description2 = request.POST['description2']
+        upd.qty2 = request.POST['qty2']
+        upd.rate2 = request.POST['rate2']
+        upd.total2 = request.POST['total2']
+        upd.tax2 = request.POST['tax2']
+
+        upd.product3 = request.POST['product3']
+        upd.hsn3 = request.POST['hsn3']
+        upd.description3  = request.POST['description3']
+        upd.qty3 = request.POST['qty3']
+        upd.rate3 = request.POST['rate3']
+        upd.total3 = request.POST['total3']
+        upd.tax3 = request.POST['tax3']
+        upd.taxamount = request.POST['taxamount']
+
+        upd.reference_number = request.POST['Ref_No']
+        upd.note = request.POST['Note']
+
+        upd.subtotal=request.POST['sub_total'],
+        upd.IGST =request.POST['IGST'],
+        upd.CGST  = request.POST['CGST'],
+        upd.SGST = request.POST['SGST'],
+        upd.TCS = request.POST['TCS'],
+        upd.salestotal = request.POST['totalamount'],
+
+        if len(request.FILES) != 0:
+            if len(upd.file) > 0  :
+                os.remove(upd.sales.path)
+                
+            upd.file = request.FILES['file'],
+
+        
+
+        upd.save()
+        return redirect('goestimate')
+    else:
+        return redirect('goestimate')
+
+
+
+
+def sale_convert1(request,id):
+    cmp1 = company.objects.get(id=request.session['uid'])
+    upd = salesorder.objects.get(id=id, cid=cmp1)
+
+    upd.status = 'Approved'
+    upd.save()
+
+
+
+    return redirect(sales_order_view,id)
+
+def sale_convert2(request,id):
+    cmp1 = company.objects.get(id=request.session['uid'])
+    upd = salesorder.objects.get(id=id, cid=cmp1)
+
+    upd.status = 'Invoice'
+    upd.save()
+
+
+
+    return redirect(sales_order_view,id)
+
+
+
+def sale_filter1(request):
+    cmp1 = company.objects.get(id=request.session["uid"])
+    sel1 = salesorder.objects.filter(cid=cmp1,status='Draft').all()
+
+    context = {
+            'sel1' :sel1,
+            'cmp1': cmp1
+            }
+    return render(request,'app1/gosalesorder.html',context)
+
+def sale_filter2(request):
+    cmp1 = company.objects.get(id=request.session["uid"])
+    sel1 = salesorder.objects.filter(cid=cmp1,status='Approved').all()
+
+    context = {
+            'sel1' :sel1,
+            'cmp1': cmp1
+            }
+    return render(request,'app1/gosalesorder.html',context)
+
+def sale_filter3(request):
+    cmp1 = company.objects.get(id=request.session["uid"])
+    sel1 = salesorder.objects.filter(cid=cmp1,status='Invoice').all()
+
+    context = {
+            'sel1' :sel1,
+            'cmp1': cmp1
+            }
+    return render(request,'app1/gosalesorder.html',context)
+
+
+def search_sale(request):
+    if request.method == "POST":
+        cmp1 = company.objects.get(id=request.session["uid"])
+        search = request.POST['search']
+        cloumn = request.POST['type']
+
+        if cloumn == '1' or search  == '':
+            return redirect('gosalesorder')    
+
+        else :
+            if cloumn == '2':
+                cmp1 = company.objects.get(id=request.session["uid"])
+                sel1= salesorder.objects.filter(cid=cmp1,salename =search).all()
+
+                context = {
+                            'sel1' :sel1,
+                            'cmp1': cmp1
+                                }
+                return render(request,'app1/gosalesorder.html',context)
+            else:
+                if cloumn == '3':
+                    cmp1 = company.objects.get(id=request.session["uid"])
+                    sel1= salesorder.objects.filter(cid=cmp1,salename=search).all()
+
+                    context = {
+                            'sel1' :sel1,
+                            'cmp1': cmp1
+                                }
+                    return render(request,'app1/gosalesorder.html',context)        
+   
+    
+    return redirect('gosalesorder')

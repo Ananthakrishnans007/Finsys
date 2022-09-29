@@ -11,31 +11,7 @@
    
     <style>
 
-        #div1{
-            /* background-color: rgb(0, 255, 21); */
-            width: 33.33%;
-            float: left;
-            height: 100px;
-            text-align: left;
-        }
-        #div2{
-            /* background-color: rgb(204, 0, 255); */
-            width: 33.33%;
-            margin: auto;
-            height: 100px;
-            text-align: left;
-        }
-        #div3{
-            /* background-color: rgb(255, 162, 0); */
-            width: 33.33%;
-            
-            float: right;
-            margin-top: -100px;
-            height: 100px;
-           
-            
-            
-        }
+     
         .ribbon .ribbon-inner {
     text-align: center;
     color: #fff;
@@ -50,6 +26,10 @@
     background-color: #268ddd;
     border-color: #1c72b4;
 }
+
+
+
+
 
     </style>
 
@@ -95,18 +75,18 @@
         <div class="card radius-15">
             <div class="card-body">
                 <div class="card-title">
-                    <center><h2 class="mb-0">ESTIMATE VIEW</h2> <h4></h4></center>
+                    <center><h2 class="mb-0">SALES ORDER VIEW</h2> <h4></h4></center>
                     <hr>
                 </div>
                 <div class="btn-group" style="float: right; ">
 
                    
-                <a href="{% url 'editestimate' estimate.estimateid %}" class=" fa fa-pencil" style="padding: 10px; cursor: pointer;"> Edit</a>
+                <a href="{% url 'edit_sales_order' sale.id  %}" class=" fa fa-pencil" style="padding: 10px; cursor: pointer;"> Edit</a>
 
                 
                 <a   style="padding: 10px; margin-top: -5px; cursor: pointer;" > 
 
-                 <form  action="{% url 'deleteestimate' estimate.estimateid %}"   > 
+                 <form  action="{% url 'sales_order_delete' sale.id %}"   > 
                     <i class="fa fa-trash-o delete"> Delete</i>
                     <input name="_method" type="hidden" value="DELETE">
                     
@@ -139,8 +119,8 @@
                     <li  class=" dropdown-toggle  "data-toggle="dropdown"> &nbsp;Convert
                 </li>
                     <ul class="dropdown-menu" style="background-color: black;">
-                        <a class="dropdown-item " href="{% url 'convert1' estimate.estimateid %}"> &nbsp;Approved </a>
-                        <a class="dropdown-item " href="{% url 'convert2' estimate.estimateid %}"> &nbsp;Sales</a>
+                        <a class="dropdown-item " href="{% url 'sale_convert1' sale.id  %}"> &nbsp;Approved </a>
+                        <a class="dropdown-item " href="{% url 'sale_convert2' sale.id  %}"> &nbsp;Invoced</a>
                         
                         
                     </ul>
@@ -157,17 +137,17 @@
                 <div class="my-5 page" size="A4" >
                     <div class="p-5">
                         <div id="ember2512" class="tooltip-container ember-view ribbon text-ellipsis">
-                            <div class="ribbon-inner ribbon-open">{{estimate.status}}<!----></div></div>
+                            <div class="ribbon-inner ribbon-open">{{sale.status}}<!----></div></div>
                         <section class="top-content bb d-flex justify-content-between">
                             <div class="logo">
                                 <!-- <img src="logo.png" alt="" class="img-fluid"> -->
                             </div>
                             <div class="top-left">
                                 <div class="graphic-path">
-                                    <p>Estimate</p>
+                                    <p>Sales Order</p>
                                 </div>
                                 <div class="position-relative">
-                                    <p>Estimate No. <span>{{estimate.estimateno }}</span></p>
+                                    <p>Sales Order No. <span>{{sale.saleno  }}</span></p>
                                 </div>
                             </div>
                         </section>
@@ -187,17 +167,17 @@
                                     </div>
                                     <div class="col-5">
                                         <p>TO,</p>
-                                        <h5>{{estimate.customer}}</h5>
-                                        <p class="address col-6" style="margin-left: -14px;" > {{ estimate.billingaddress}} </p>
+                                        <h5>{{sale.salename}}</h5>
+                                        <p class="address col-6" style="margin-left: -14px;" > {{ sale.saleaddress}} </p>
                                         
                                     </div>
                                 </div>
                                 <div class="row extra-info pt-3">
                                     <div class="col-7">
-                                        <p>Estimate Date: <span>{{estimate.estimatedate | date:'d-m-Y'}}</span></p>
+                                        <p>Sales Order Date: <span>{{sale.saledate | date:'d-m-Y'}}</span></p>
                                     </div>
                                     <div class="col-5">
-                                        <p>Expiration Date : <span>{{estimate.expirationdate | date:'d-m-Y'}}</span></p>
+                                        <p>Expected Shipment Date : <span>{{sale.shipmentdate | date:'d-m-Y'}}</span></p>
                                     </div>
                                 </div>
                             </div>
@@ -221,65 +201,65 @@
                                             <div class="media">
                                                 
                                                 <div class="media-body">
-                                                    <p class="mt-0 title" style="color:black">{{estimate.product}}</p>
-                                                    <span style="color:black">{{estimate.description}}</span>
+                                                    <p class="mt-0 title" style="color:black">{{sale.product}}</p>
+                                                    <span style="color:black">{{sale.description}}</span>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td style="color:black">{{estimate.rate}}</td>
-                                        <td style="color:black">{{estimate.qty}}</td>
-                                        <td style="color:black">{{estimate.total}}</td>
+                                        <td style="color:black">{{sale.rate}}</td>
+                                        <td style="color:black">{{sale.qty}}</td>
+                                        <td style="color:black">{{sale.total}}</td>
                                     </tr>
                                     
 
-                                    {% if estimate.product1 == NIL  %}
+                                    {% if sale.product1 == NIL  %}
                                     <tr>
                                         <td>
                                             <div class="media">
                                                 
                                                 <div class="media-body">
-                                                    <p class="mt-0 title" style="color:black">{{estimate.product1}}</p>
-                                                    <span style="color:black">{{estimate.description1}}</span>
+                                                    <p class="mt-0 title" style="color:black">{{sale.product1}}</p>
+                                                    <span style="color:black">{{sale.description1}}</span>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td style="color:black">{{estimate.rate1}}</td>
-                                        <td style="color:black">{{estimate.qty1}}</td>
-                                        <td style="color:black">{{estimate.total1}}</td>
+                                        <td style="color:black">{{salerate1}}</td>
+                                        <td style="color:black">{{sale.qty1}}</td>
+                                        <td style="color:black">{{sale.total1}}</td>
                                     </tr>
                                     {% endif %}
 
-                                    {% if estimate.product2 == NIL  %}
+                                    {% if sale.product2 == NIL  %}
                                     <tr>
                                         <td>
                                             <div class="media">
                                                 
                                                 <div class="media-body">
-                                                    <p class="mt-0 title" style="color:black">{{estimate.product2}}</p>
-                                                    <span style="color:black">{{estimate.description2}}</span>
+                                                    <p class="mt-0 title" style="color:black">{{sale.product2}}</p>
+                                                    <span style="color:black">{{sale.description2}}</span>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td style="color:black">{{estimate.rate2}}</td>
-                                        <td style="color:black">{{estimate.qty2}}</td>
-                                        <td style="color:black">{{estimate.total2}}</td>
+                                        <td style="color:black">{{sale.rate2}}</td>
+                                        <td style="color:black">{{sale.qty2}}</td>
+                                        <td style="color:black">{{sale.total2}}</td>
                                     </tr>
                                     {% endif %}
-                                    {% if estimate.product3 == NIL  %}
+                                    {% if sale.product3 == NIL  %}
 
                                     <tr>
                                         <td>
                                             <div class="media">
                                                 
                                                 <div class="media-body">
-                                                    <p class="mt-0 title" style="color:black">{{estimate.product3}}</p>
-                                                    <span style="color:black">{{estimate.description3}}</span>
+                                                    <p class="mt-0 title" style="color:black">{sale.product3}}</p>
+                                                    <span style="color:black">{{sale.description3}}</span>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td style="color:black">{{estimate.rate3}}</td>
-                                        <td style="color:black">{{estimate.qty3}}</td>
-                                        <td style="color:black">{{estimate.total3}}</td>
+                                        <td style="color:black">{{sale.rate3}}</td>
+                                        <td style="color:black">{sale.qty3}}</td>
+                                        <td style="color:black">{{sale.total3}}</td>
                                     </tr>
 
                                     {% endif %}
@@ -296,42 +276,42 @@
                             <div class="row">
                                 <div class="col-8">
                                     <p class="m-0 font-weight-bold" style="color:black"> Note: </p>
-                                    <p style="color:black">{{estimate.note}}</p>
+                                    <p style="color:black">{{sale.note}}</p>
                                 </div>
                                 <div class="col-4">
                                     <table class="table border-0 table-hover">
                                         <tr >
                                             <td style="color:black">Sub Total :</td>
-                                            <td style="color:black">{{estimate.subtotal}}</td>
+                                            <td style="color:black">{{sale.subtotal}}</td>
                                         </tr>
-                                        {% if estimate.IGST != "0.00" %}
+                                        {% if sale.IGST != "0.00" %}
                                         <tr>
                                             <td style="color:black">IGST :</td>
-                                            <td style="color:black">{{estimate.IGST}}</td>
+                                            <td style="color:black">{{sale.IGST}}</td>
                                         </tr>
                                         {% endif %}
-                                        {% if estimate.CGST != "0.00" %}
+                                        {% if sale.CGST != "0.00" %}
                                         <tr>
                                             <td style="color:black">CGST :</td>
-                                            <td style="color:black">{{estimate.CGST}}</td>
+                                            <td style="color:black">{{sale.CGST}}</td>
                                         </tr>
                                         {% endif %}
-                                        {% if estimate.SGST != "0.00" %}
+                                        {% if sale.SGST != "0.00" %}
                                         <tr>
                                             <td style="color:black">SGST:</td>
-                                            <td style="color:black">{{estimate.SGST}}</td>
+                                            <td style="color:black">{{sale.SGST}}</td>
                                         </tr>
                                         {% endif %}
-                                        {% if estimate.TCS != "0.00" %}
+                                        {% if sale.TCS != "0.00" %}
                                         <tr>
                                             <td style="color:black">TCS:</td>
-                                            <td style="color:black">{{estimate.TCS}}</td>
+                                            <td style="color:black">{{sale.TCS}}</td>
                                         </tr>
                                         {% endif %}
                                         <tfoot>
                                             <tr>
-                                                <td style="color:black">Estimate Total:</td>
-                                                <td style="color:black ;">{{estimate.estimatetotal}}</td>
+                                                <td style="color:black">Grand Total:</td>
+                                                <td style="color:black ;">{{sale.salestotal}}</td>
                                             </tr>
                                         </tfoot>
                                     </table>
