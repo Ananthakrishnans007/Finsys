@@ -354,6 +354,8 @@ urlpatterns = [
 
 
 
+    # Ananthakrishnan
+    
     re_path(r'^gosearch',views.gosearch,name='gosearch'),
 
     path('gstverification',views.gstverification,name='gstverification'),
@@ -413,19 +415,63 @@ urlpatterns = [
 
     path('search_sale',views.search_sale,name='search_sale'),
 
-    
-
-
-    
-
-    
-
-    
-
-
-
 
     # path('pdf',views.pdf,name='pdf'),
+
+
+
+
+
+    # Rahanas ----------
+
+    # item
+    re_path(r'^add_item$', views.add_item, name='add_item'),
+    re_path(r'^add_unit$', views.add_unit, name='add_unit'),
+    re_path(r'^goitem$', views.goitem, name='goitem'),
+    re_path(r'^create_item$', views.create_item, name='create_item'),
+    re_path(r'^deleteitem/(?P<id>\d+)$', views.deleteitem, name='deleteitem'),
+    #re_path(r'^showservices$', views.showservices, name='showservices'),
+    re_path(r'^create_unit$', views.create_unit, name='create_unit'),
+    re_path(r'^view_item/(?P<id>\d+)$', views.view_item, name='view_item'),
+    re_path(r'^itemedit_page/(?P<id>\d+)$', views.itemedit_page, name='itemedit_page'),
+    re_path(r'^igoods$', views.igoods, name='igoods'),
+    re_path(r'^iservices$', views.iservices, name='iservices'),
+    re_path(r'^iordername$', views.iordername, name='iordername'),
+    re_path(r'^iodhsn$', views.iodhsn, name='iodhsn'),
+    re_path(r'^iactive$', views.iactive, name='iactive'),
+    re_path(r'^inactive$', views.inactive, name='inactive'),
+    re_path(r'^ipurchase$', views.ipurchase, name='ipurchase'),
+    re_path(r'^isales$', views.isales, name='isales'),
+    re_path(r'^update_item/(?P<id>\d+)$', views.update_item, name='update_item'),
+    re_path(r'^iod_rate$', views.iod_rate, name='iod_rate'),
+    re_path(r'^iod_import$', views.iod_import, name='iod_import'),
+    re_path(r'^iod_export$', views.iod_export, name='iod_export'),
+
+    #  manual journal
+    re_path(r'^gomjoural$', views.gomjoural, name='gomjoural'),
+    re_path(r'^add_mjournal$', views.add_mjournal, name='add_mjournal'),
+    re_path(r'^create_mjournal$', views.create_mjournal, name='create_mjournal'),
+    re_path(r'^view_mj/(?P<id>\d+)$', views.view_mj, name='view_mj'),
+    re_path(r'^mj_edit_page/(?P<id>\d+)$', views.mj_edit_page, name='mj_edit_page'),
+    re_path(r'^update_mj/(?P<id>\d+)$', views.update_mj, name='update_mj'),
+    re_path(r'^deletemj/(?P<id>\d+)$', views.deletemj, name='deletemj'),
+    re_path(r'^mjdraft$', views.mjdraft, name='mjdraft'),
+    re_path(r'^mjpublish$', views.mjpublish, name='mjpublish'),
+
+    #   settings
+    re_path(r'^C_profile$', views.C_profile, name='C_profile'),
+    re_path(r'^update_cprofile$', views.update_cprofile, name='update_cprofile'),
+    re_path(r'^view_users$', views.view_users, name='view_users'),
+    re_path(r'^Currencies$', views.Currencies, name='Currencies'),
+    re_path(r'^create_currency$', views.create_currency, name='create_currency'),
+    re_path(r'^gotemplates$', views.gotemplates, name='gotemplates'),
+    re_path(r'^temp_inv$', views.temp_inv, name='temp_inv'),
+    re_path(r'^addcurrencies$', views.addcurrencies, name='addcurrencies'),
+    re_path(r'^edit_currencies/(?P<id>\d+)$', views.edit_currencies, name='edit_currencies'),
+    re_path(r'^update_currency/(?P<id>\d+)$', views.update_currency, name='update_currency'),
+    re_path(r'^delete_currency/(?P<id>\d+)$', views.delete_currency, name='delete_currency'),
+    re_path(r'^temp_est$', views.temp_est, name='temp_est'),
+    
 
 
     

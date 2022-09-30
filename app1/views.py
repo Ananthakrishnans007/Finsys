@@ -25549,6 +25549,8 @@ def deletestyle(request, customizeid):
 
 
 
+# Ananthakrishnan
+
 def gosearch(request):
     if request.method == "POST":
         cmp1 = company.objects.get(id=request.session["uid"])
@@ -25613,7 +25615,8 @@ def estindex2(request):
         bun = bundle.objects.filter(cid=cmp1).all()
         noninv = noninventory.objects.filter(cid=cmp1).all()
         ser = service.objects.filter(cid=cmp1).all()
-        context = {'est': est1, 'customers': customers, 'cmp1': cmp1, 'inv': inv, 'bun': bun, 'noninv': noninv,
+        item = itemtable.objects.filter(cid=cmp1).all()
+        context = {'est': est1, 'customers': customers, 'cmp1': cmp1, 'inv': inv, 'bun': bun, 'noninv': noninv,'item':item,
                    'ser': ser, 'tod': tod}
         return render(request, 'app1/estimate2.html', context)
     except:
@@ -25707,8 +25710,11 @@ def editestimate(request, id):
         bun = bundle.objects.filter(cid=cmp1).all()
         noninv = noninventory.objects.filter(cid=cmp1).all()
         ser = service.objects.filter(cid=cmp1).all()
+        item = itemtable.objects.filter(cid=cmp1).all()
+
+
         context = {'estimate': edt, 'cmp1': cmp1, 'inv': inv,
-                   'noninv': noninv, 'bun': bun, 'ser': ser}
+                   'noninv': noninv, 'bun': bun, 'ser': ser,'item':item}
         return render(request, 'app1/edit_estimate.html', context)
     except:
         return redirect('goestimate')
@@ -25981,7 +25987,8 @@ def newsalesorder(request):
     bun = bundle.objects.filter(cid=cmp1).all()
     noninv = noninventory.objects.filter(cid=cmp1).all()
     ser = service.objects.filter(cid=cmp1).all()
-    context = {'sel1': sel1, 'customers': customers, 'cmp1': cmp1, 'inv': inv, 'bun': bun, 'noninv': noninv,
+    item = itemtable.objects.filter(cid=cmp1).all()
+    context = {'sel1': sel1, 'customers': customers, 'cmp1': cmp1, 'inv': inv, 'bun': bun, 'noninv': noninv,'item':item,
                    'ser': ser, 'tod': tod}
         
     print(sel1)
@@ -26113,8 +26120,9 @@ def edit_sales_order(request, id):
         bun = bundle.objects.filter(cid=cmp1).all()
         noninv = noninventory.objects.filter(cid=cmp1).all()
         ser = service.objects.filter(cid=cmp1).all()
+        item = itemtable.objects.filter(cid=cmp1).all()
         context = {'sale': edt, 'cmp1': cmp1, 'inv': inv,
-                   'noninv': noninv, 'bun': bun, 'ser': ser}
+                   'noninv': noninv, 'bun': bun, 'ser': ser,'item':item,}
         return render(request, 'app1/edit_sales_order.html', context)
     except:
         return redirect('gosalesorder')
@@ -26278,3 +26286,594 @@ def search_sale(request):
    
     
     return redirect('gosalesorder')
+
+
+
+# Rahanas
+
+
+
+@login_required(login_url='regcomp')
+def add_item(request):
+    try:
+        cmp1 = company.objects.get(id=request.session['uid'])
+        unit = unittable.objects.filter(cid=cmp1)
+        acc  = accounts1.objects.filter(acctype='Cost of Goods Sold',cid=cmp1)
+        acc1  = accounts1.objects.filter(acctype='Sales',cid=cmp1)
+        context = {'unit':unit,'acc':acc,'acc1':acc1,'cmp1': cmp1}
+        return render(request, 'app1/additem.html',context)
+    except:
+        return redirect('goitem')
+
+@login_required(login_url='regcomp')
+def add_unit(request):
+    try:
+        cmp1 = company.objects.get(id=request.session['uid'])
+        return render(request, 'app1/unitcreation.html',{'cmp1': cmp1})    
+    except:
+        return redirect('goitem')
+
+@login_required(login_url='regcomp')
+def goitem(request):
+    try:
+        cmp1 = company.objects.get(id=request.session['uid'])
+        items = itemtable.objects.filter(cid=cmp1)
+        context = {'items':items,'cmp1':cmp1}
+        return render(request, 'app1/itemmodule.html',context)  
+    except:
+        return redirect('goitem')
+
+def iactive(request):
+    try:
+        cmp1 = company.objects.get(id=request.session['uid'])
+        items = itemtable.objects.filter(status='Active',cid=cmp1)
+        context = {'items':items,'cmp1': cmp1}
+        return render(request, 'app1/itemmodule.html',context) 
+    except:
+        return redirect('goitem')
+
+def inactive(request):
+    try:
+        cmp1 = company.objects.get(id=request.session['uid'])
+        items = itemtable.objects.filter(status='Inactive',cid=cmp1)
+        context = {'items':items,'cmp1': cmp1}
+        return render(request, 'app1/itemmodule.html',context)     
+    except:
+        return redirect('goitem')
+
+def igoods(request):
+    try:
+        cmp1 = company.objects.get(id=request.session['uid'])
+        items = itemtable.objects.filter(item_type='goods',cid=cmp1)
+        context = {'items':items,'cmp1': cmp1}
+        return render(request, 'app1/itemmodule.html',context) 
+    except:
+        return redirect('goitem')
+
+def iservices(request):
+    try:
+        cmp1 = company.objects.get(id=request.session['uid'])
+        items = itemtable.objects.filter(item_type='services',cid=cmp1)
+        context = {'items':items,'cmp1': cmp1}
+        return render(request, 'app1/itemmodule.html',context)    
+    except:
+        return redirect('goitem') 
+
+def ipurchase(request):
+    try:
+        cmp1 = company.objects.get(id=request.session['uid'])
+        items = itemtable.objects.exclude(purchase_cost='').filter(cid=cmp1)
+        context = {'items':items,'cmp1': cmp1}
+        return render(request, 'app1/itemmodule.html',context)     
+    except:
+        return redirect('goitem')
+
+def isales(request):
+    try:
+        cmp1 = company.objects.get(id=request.session['uid'])
+        items = itemtable.objects.exclude(sales_cost='').filter(cid=cmp1)
+        context = {'items':items,'cmp1': cmp1}
+        return render(request, 'app1/itemmodule.html',context)         
+    except:
+        return redirect('goitem')
+
+
+
+
+
+def iordername(request):
+    try:
+        cmp1 = company.objects.get(id=request.session['uid'])
+        items = itemtable.objects.order_by('name').filter(cid=cmp1)
+        context = {'items':items,'cmp1': cmp1}
+        return render(request, 'app1/itemmodule.html',context)      
+    except:
+        return redirect('goitem')
+
+def iodhsn(request):
+    try:
+        cmp1 = company.objects.get(id=request.session['uid'])
+        items = itemtable.objects.order_by('hsn').filter(cid=cmp1)
+        context = {'items':items,'cmp1': cmp1}
+        return render(request, 'app1/itemmodule.html',context)         
+    except:
+        return redirect('goitem')
+
+def iod_rate(request):
+    try:
+        cmp1 = company.objects.get(id=request.session['uid'])
+        items = itemtable.objects.order_by('tax_rate').filter(cid=cmp1)
+        context = {'items':items,'cmp1': cmp1}
+        return render(request, 'app1/itemmodule.html',context)  
+    except:
+        return redirect('goitem')
+
+
+
+def iod_import(request):
+    try:
+        cmp1 = company.objects.get(id=request.session['uid'])
+        items = itemtable.objects.order_by('purchase_cost').filter(cid=cmp1)
+        context = {'items':items,'cmp1': cmp1}
+        return render(request, 'app1/itemmodule.html',context)  
+    except:
+        return redirect('goitem')
+
+def iod_export(request):
+    try:
+        cmp1 = company.objects.get(id=request.session['uid'])
+        items = itemtable.objects.order_by('sales_cost').filter(cid=cmp1)
+        context = {'items':items,'cmp1': cmp1}
+        return render(request, 'app1/itemmodule.html',context)              
+    except:
+        return redirect('goitem')
+
+@login_required(login_url='regcomp')
+def create_item(request):
+    try:
+        if request.method == 'POST':
+            cmp1 = company.objects.get(id=request.session['uid'])
+            iname = request.POST['name']
+            itype = request.POST['type']
+            iunit = request.POST.get('unit')
+            ihsn = request.POST['hsn']
+            itax = request.POST['taxref']
+            ipcost = request.POST['pcost']
+            iscost = request.POST['salesprice']
+            itrate = request.POST['tax']
+            ipuracc = request.POST['pur_account']
+            isalacc = request.POST['sale_account']
+            ipurdesc = request.POST['pur_desc']
+            isaledesc = request.POST['sale_desc']
+            iintra = request.POST['intra_st']
+            iinter = request.POST['inter_st']
+            iinv = request.POST['invacc']
+            istock = request.POST['stock']
+            istatus = request.POST['status']
+            item = itemtable(name=iname,item_type=itype,unit=iunit,
+                                hsn=ihsn,tax_reference=itax,
+                                purchase_cost=ipcost,
+                                sales_cost=iscost,
+                                tax_rate=itrate,
+                                acount_pur=ipuracc,
+                                account_sal=isalacc,
+                                pur_desc=ipurdesc,
+                                sale_desc=isaledesc,
+                                intra_st=iintra,
+                                inter_st=iinter,
+                                inventry=iinv,
+                                stock=istock,
+                                status=istatus,
+                                cid=cmp1)
+            item.save()
+            return redirect('goitem')
+        return render(request,'app1/additem.html')
+    except:
+        return redirect('goitem')
+
+@login_required(login_url='regcomp')
+def create_unit(request):
+    try:
+        cmp1 = company.objects.get(id=request.session['uid'])
+        if request.method == 'POST':
+            usymbol = request.POST['usymbol']
+            uname = request.POST['uname']
+            unit = unittable(unit_symbol=usymbol,name=uname)
+            unit.save()
+            return redirect('add_item')
+        return render(request,'app1/unitcreation.html',{'cmp1': cmp1})    
+    except:
+        return redirect('goitem')
+
+@login_required(login_url='regcomp')
+def deleteitem(request, id):
+    try:
+        cmp1 = company.objects.get(id=request.session['uid'])
+        try:
+            sl = itemtable.objects.get(id=id)
+            sl.delete()
+            return redirect('goitem',{'cmp1': cmp1})
+        except:
+            return redirect('goitem')
+    except:
+        return redirect('goitem')
+
+@login_required(login_url='regcomp')
+def view_item(request,id):
+    try:
+        cmp1 = company.objects.get(id=request.session['uid'])
+        item = itemtable.objects.filter(id=id)
+        context = {'item':item,'cmp1': cmp1}
+        return render(request,'app1/item_view.html',context)
+    except:
+        return redirect('goitem')
+
+@login_required(login_url='regcomp')
+def itemedit_page(request,id):   
+    try:
+        cmp1 = company.objects.get(id=request.session['uid'])
+        item = itemtable.objects.filter(id=id)
+        unit = unittable.objects.filter(cid=cmp1)
+        acc  = accounts1.objects.filter(acctype='Cost of Goods Sold',cid=cmp1)
+        acc1  = accounts1.objects.filter(acctype='Sales',cid=cmp1)
+        context = {'item':item,'unit':unit,'acc':acc,'acc1':acc1,'cmp1': cmp1}
+        return render(request,'app1/item_edit.html',context) 
+    except:
+        return redirect('goitem')
+
+@login_required(login_url='regcomp')
+def update_item(request, id):
+    try:
+        cmp1 = company.objects.get(id=request.session['uid'])
+        if request.method == 'POST':
+            item = itemtable.objects.get(id=id)
+            item.name = request.POST.get('name')
+            item.item_type = request.POST.get('type')
+            item.unit = request.POST.get('unit')
+            item.hsn = request.POST.get('hsn')
+            item.tax_reference = request.POST.get('taxref')
+            item.purchase_cost = request.POST.get('pcost')
+            item.sales_cost = request.POST.get('salesprice')
+            item.tax_rate = request.POST.get('tax')
+            item.acount_pur = request.POST.get('pur_account')
+            item.account_sal = request.POST.get('sale_account')
+            item.pur_desc = request.POST.get('pur_desc')
+            item.sale_desc = request.POST.get('sale_desc')
+            item.intra_st = request.POST.get('intra_st')
+            item.inter_st = request.POST.get('inter_st')
+            item.inventry = request.POST.get('invacc')
+            item.stock = request.POST.get('stock')
+            item.status = request.POST.get('status')
+            item.save()
+            return redirect('goitem')
+        return render(request,'app1/item_view.html',{'cmp1': cmp1})    
+    except:
+        return redirect('goitem')
+
+@login_required(login_url='regcomp')
+def gomjoural(request):
+    try:
+        cmp1 = company.objects.get(id=request.session['uid'])
+        mj = mjournal.objects.filter(cid=cmp1)
+        return render(request,'app1/mjournal.html',{'mj':mj})
+    except:
+        return redirect('gomjoural')    
+
+@login_required(login_url='regcomp')
+def add_mjournal(request): 
+    try:
+        cmp1 = company.objects.get(id=request.session['uid'])
+        acc = accounts1.objects.filter(cid=cmp1)
+        cust = customer.objects.filter(cid=cmp1)
+        context = {'acc':acc,'cmp1':cmp1,'cust':cust}
+        return render(request,'app1/add_mjournal.html',context)    
+    except:
+        return redirect('gomjoural')    
+
+
+@login_required(login_url='regcomp')
+def create_mjournal(request):
+    if request.method == 'POST':
+        cmp1 = company.objects.get(id=request.session['uid'])
+        mjdate = request.POST['dateto1']
+        mjno = request.POST['jnum']
+        mjrno = request.POST.get('rjnum')
+        notes = request.POST['jnotes']
+        currency = request.POST['jcurrency']
+        mjtype = request.POST.get('jtype')
+        acc1 = request.POST.get('account')
+        desc1 = request.POST['jdesc']
+        cont1 = request.POST['jcontact']
+        deb1 = request.POST['jdebit']
+        cred1 = request.POST['jcredit']
+        acc2 = request.POST.get('account1')
+        desc2 = request.POST['jdesc1']
+        cont2 = request.POST['jcontact1']
+        deb2 = request.POST['jdebit1']
+        cred2 = request.POST['jcredit1']
+        file = request.FILES['pic']
+        subtotal = request.POST['sub_total']
+        subtotal1 = request.POST['sub_total1']
+        total = request.POST['total_amount']
+        total1 = request.POST['total_amount1']
+        differ = request.POST['differ']
+            
+        mjrnl = mjournal(date=mjdate,mj_no=mjno,ref_no=mjrno,
+                                notes=notes,j_type=mjtype,
+                                currency=currency,
+                                account1=acc1,
+                                desc1=desc1,
+                                contact1=cont1,
+                                debit1=deb1,
+                                credit1=cred1,
+                                account2=acc2,
+                                desc2=desc2,
+                                contact2=cont2,
+                                debit2=deb2,
+                                credit2=cred2,
+                                attach=file,
+                                s_totaldeb=subtotal,
+                                s_totalcre=subtotal1,
+                                total_deb=total,
+                                total_cre=total1,
+                                difference=differ,
+                                cid=cmp1)
+
+        if deb1 == cred2:
+            mjrnl.save()
+        else:    
+            messages.info( request, 'Please ensure that the debit and credit are equal')
+            return render(request, 'app1/add_mjournal.html')                        
+        return redirect('gomjoural')
+    return render(request,'app1/add_mjournal.html')
+         
+
+@login_required(login_url='regcomp')
+def view_mj(request,id):
+    try:
+        cmp1 = company.objects.get(id=request.session['uid'])
+        mjl = mjournal.objects.filter(id=id)
+        context = {'mjl':mjl,'cmp1': cmp1}
+        return render(request,'app1/view_mj.html',context)
+    except:
+        return redirect('gomjoural')         
+
+@login_required(login_url='regcomp')
+def mj_edit_page(request,id):   
+    try:
+        cmp1 = company.objects.get(id=request.session['uid'])
+        mjrnl = mjournal.objects.filter(id=id)
+        acc  = accounts1.objects.filter(cid=cmp1)
+        context = {'mjrnl':mjrnl,'acc':acc,'cmp1': cmp1}
+        return render(request,'app1/mj_edit.html',context) 
+    except:
+        return redirect('gomjoural')
+
+@login_required(login_url='regcomp')
+def update_mj(request, id):
+    try:
+        cmp1 = company.objects.get(id=request.session['uid'])
+        if request.method == 'POST':
+            mjrnl = mjournal.objects.get(id=id)
+            mjrnl.date = request.POST.get('dateto1')
+            mjrnl.mj_no = request.POST.get('jnum')
+            mjrnl.ref_no = request.POST.get('rjnum')
+            mjrnl.notes = request.POST.get('jnotes')
+            mjrnl.j_type = request.POST.get('jtype')
+            mjrnl.currency = request.POST.get('jcurrency')
+            mjrnl.account1 = request.POST.get('account')
+            mjrnl.desc1 = request.POST.get('jdesc')
+            mjrnl.contact1 = request.POST.get('jcontact')
+            mjrnl.debit1 = request.POST.get('jdebit')
+            mjrnl.credit1 = request.POST.get('jcredit')
+            mjrnl.account2 = request.POST.get('account1')
+            mjrnl.desc2 = request.POST.get('jdesc1')
+            mjrnl.contact2 = request.POST.get('jcontact1')
+            mjrnl.debit2 = request.POST.get('jdebit1')
+            mjrnl.credit2 = request.POST.get('jcredit1')
+            mjrnl.attach = request.POST.get('pic')
+            mjrnl.s_totaldeb = request.POST.get('sub_total')
+            mjrnl.s_totalcre = request.POST.get('sub_total1')
+            mjrnl.total_deb = request.POST.get('total_amount')
+            mjrnl.total_cre = request.POST.get('total_amount1')
+            mjrnl.difference = request.POST.get('differ')
+            mjrnl.status = request.POST.get('status')
+            mjrnl.save()
+            return redirect('gomjoural')
+        return render(request,'app1/view_mj.html',{'cmp1': cmp1})    
+    except:
+        return redirect('gomjoural')
+
+        
+ 
+@login_required(login_url='regcomp')
+def deletemj(request, id):
+    try:
+        cmp1 = company.objects.get(id=request.session['uid'])
+        try:
+            sl = mjournal.objects.get(id=id)
+            sl.delete()
+            return redirect('gomjoural',{'cmp1': cmp1})
+        except:
+            return redirect('gomjoural')
+    except:
+        return redirect('gomjoural')       
+
+def mjdraft(request):
+    try:
+        cmp1 = company.objects.get(id=request.session['uid'])
+        mj = mjournal.objects.filter(status='DRAFT',cid=cmp1)
+        return render(request,'app1/mjournal.html',{'mj':mj})
+    except:
+        return redirect('gomjoural')            
+
+@login_required(login_url='regcomp')
+def C_profile(request):
+    try:
+        cmp1 = company.objects.get(id=request.session["uid"])
+        context = {'cmp1': cmp1}
+        return render(request, 'app1/com_profile.html', context)
+    except:
+        return redirect('godash') 
+
+@login_required(login_url='regcomp')
+def update_cprofile(request):
+    if request.method=="POST":
+        user = User.objects.get(id=request.session["uid"])
+        comp = company.objects.get(id=user.id)
+
+
+        comp.cname = request.POST["cname"]
+        comp.caddress = request.POST["caddress"]
+        comp.city = request.POST["city"]
+        comp.state = request.POST["state"]
+        comp.pincode = request.POST["pincode"]
+        comp.cemail = request.POST["cemail"]
+        comp.phone = request.POST["phone"]
+        comp.bname = request.POST["bname"]
+        comp.industry = request.POST["industry"]
+        comp.ctype = request.POST["ctype"]
+        if request.FILES.get('img1') is not None:
+            if not comp.cimg == "images/images.png":
+                comp.cimg = request.FILES['img1']
+            else:
+                comp.cimg = request.FILES['img1']
+        else:
+            comp.cimg = "images/images.png"    
+
+
+
+        comp.save()
+        user.save()
+
+        return redirect('godash')        
+
+@login_required(login_url='regcomp')
+def view_users(request):
+    try:
+        cmp1 = company.objects.get(id=request.session["uid"])
+        user1 = User.objects.all()
+        context = {'user1': user1, 'cmp1': cmp1}
+        return render(request, 'app1/users.html', context)
+    except:
+        return redirect('godash')        
+
+@login_required(login_url='regcomp')
+def Currencies(request):
+    try:
+        cmp1 = company.objects.get(id=request.session["uid"])
+        curr = currencies.objects.filter(cid=cmp1)
+        context = {'cmp1': cmp1,'curr':curr}
+        return render(request, 'app1/currencies.html', context)
+    except:
+        return redirect('godash')        
+
+@login_required(login_url='regcomp')
+def addcurrencies(request):
+    try:
+        cmp1 = company.objects.get(id=request.session["uid"])
+        context = {'cmp1': cmp1}
+        return render(request, 'app1/add_currency.html', context)
+    except:
+        return redirect('Currencies')                   
+
+@login_required(login_url='regcomp')
+def create_currency(request):
+    try:
+        if request.method == 'POST':
+            cmp1 = company.objects.get(id=request.session['uid'])
+            ccode = request.POST['code']
+            csymbol = request.POST['symbol']
+            cname = request.POST.get('name')
+            cdplaces = request.POST['dplace']
+            cformat = request.POST['format']
+            curr = currencies(code=ccode,name=cname,symbol=csymbol,
+                                decimal_places=cdplaces,format=cformat,
+                                cid=cmp1)
+            curr.save()
+            return redirect('Currencies')
+        return render(request,'app1/currencies.html')
+    except:
+        return redirect('Currencies')        
+
+
+@login_required(login_url='regcomp')
+def update_currency(request, id):
+    try:
+        cmp1 = company.objects.get(id=request.session['uid'])
+        if request.method == 'POST':
+            curr = currencies.objects.get(currencyid=id)
+            curr.code = request.POST.get('code')
+            curr.symbol = request.POST.get('symbol')
+            curr.name = request.POST.get('name')
+            curr.decimal_places = request.POST.get('dplace')
+            curr.format = request.POST.get('format')
+            
+            curr.save()
+            return redirect('Currencies')
+        return render(request,'app1/currencies.html',{'cmp1': cmp1})    
+    except:
+        return redirect('Currencies')   
+
+@login_required(login_url='regcomp')
+def delete_currency(request, id):
+    try:
+        cmp1 = company.objects.get(id=request.session['uid'])
+        try:
+            sl = currencies.objects.get(currencyid=id)
+            sl.delete()
+            return redirect('Currencies',{'cmp1': cmp1})
+        except:
+            return redirect('Currencies')
+    except:
+        return redirect('Currencies')              
+
+
+@login_required(login_url='regcomp')
+def gotemplates(request):
+    try:
+        cmp1 = company.objects.get(id=request.session['uid'])
+        return render(request,'app1/templates.html')
+    except:
+        return redirect('godash')         
+
+@login_required(login_url='regcomp')
+def temp_inv(request):
+    try:
+        cmp1 = company.objects.get(id=request.session['uid'])
+        return render(request,'app1/tem_invoice.html')
+    except:
+        return redirect('gotemplates')       
+
+@login_required(login_url='regcomp')
+def edit_currencies(request,id):   
+    try:
+        cmp1 = company.objects.get(id=request.session['uid'])
+        curr = currencies.objects.filter(currencyid=id)
+        context = {'curr':curr,'cmp1': cmp1}
+        return render(request,'app1/edit_currency.html',context) 
+    except:
+        return redirect('Currencies')            
+
+@login_required(login_url='regcomp')
+def temp_est(request):
+    try:
+        cmp1 = company.objects.get(id=request.session['uid'])
+        return render(request,'app1/tem_estimate.html',{'cmp1':cmp1})
+    except:
+        return redirect('gotemplates')         
+
+
+def mjpublish(request):
+    try:
+        cmp1 = company.objects.get(id=request.session['uid'])
+        mj = mjournal.objects.filter(status='publish',cid=cmp1)
+        return render(request,'app1/mjournal.html',{'mj':mj})
+    except:
+        return redirect('gomjoural')            
+
+
+
+
+
+

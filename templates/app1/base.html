@@ -114,6 +114,7 @@
               
                  <ul id="myList" class="one" style="background-color: #213b52;">
                   <li><a href="{% url 'godash' %}">Dashboard</a></li>
+                  <li><a href="{% url 'goitem' %}">Item</a></li>
                   <li><a href="{% url 'goonlinebank' %}">Online Banking</a></li>
                   <li><a href="{% url 'goofflinebank' %}">Offline Banking</a></li>
                     <li><a href="{% url 'gobankrecon' %}">Bank Reconcilation</a></li>
@@ -266,6 +267,11 @@
             <li>
               <a href="{% url 'godash' %}">
                 <div class="menu-title">Dashboard</div>
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'goitem' %}"><i class='bx bxs-package' ></i>
+                <div class="menu-title">Item</div>
               </a>
             </li>
             <li>
